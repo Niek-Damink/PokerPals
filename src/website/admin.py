@@ -7,7 +7,7 @@ from .dbQueries import *
 
 admin = Blueprint('admin', __name__)
 
-@admin.route('/users', methods=['GET', 'POST'])
+@admin.route('/users', methods=['GET', 'POST', 'DELETE'])
 @login_required
 def adminUsers():
     if request.method == 'POST':
@@ -25,11 +25,20 @@ def adminUsers():
         elif password1 != password2:
             flash('Passwords are not the same', category='error')
         else:
-            new_user = User(name = name, password = generate_password_hash(password1), imgURL = "/pictures/pim.jpg")
+            new_user = User(name = name, password = generate_password_hash(password1), imgURL = "/pictures/account.png")
             db.session.add(new_user)
             db.session.commit()
             flash('Succesfully created account for ' + name, category='success')
+            return redirect(url_for('admin.adminUsers'))
     return render_template("admin/adminUsers.html", user = current_user, user_list = getUserAndImage()) 
+
+
+@admin.route('/users/delete/<name>', methods=['DELETE'])
+@login_required
+def deleteUser(name):
+    deleteUserName(name)
+    return redirect(url_for('admin.adminUsers'))
+
 
 @admin.route('/sessions', methods=['GET', 'POST'])
 @login_required

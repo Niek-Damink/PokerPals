@@ -38,7 +38,8 @@
 
 
     <div class="col-md-6 my-auto text-center">
-        <ul class="list-group px-4">
+        <div class="container w-75" >
+        <ul class="list-group">
             <h5 class="mb-1 p-3">Members:</h5>
             {% for name, url in user_list%}
             <li class="list-group-item list-group-item-action">
@@ -49,10 +50,31 @@
                     <div class="col">
                         {{ name }}
                     </div>
+                    <div class="col-auto">
+                        <button type="button" onclick='deleteAccount("{{name}}")' class="btn btn-danger">&times;</button>
+                    </div>
+                    <div class="col-auto">
+                        <button type="button" class="btn btn-primary">
+                            <img src="{{url_for('static', filename='pictures/editIcon.png')}}" width="20px">
+                        </button>
+                    </div>
                 </div>
             </li>
             {% endfor %}
         </ul>
     </div>
+    </div>
 </div>
+{% endblock %}
+
+{% block js%}
+<script>
+    function deleteAccount(name) {
+        fetch("http://127.0.0.1:5000/admin/users/delete/" + name, {
+            method: 'DELETE'
+        }).then(location.reload())
+
+    }
+
+</script>
 {% endblock %}
