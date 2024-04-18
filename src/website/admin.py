@@ -13,6 +13,8 @@ ALLOWED_EXTENSIONS = {'png', 'jpg'}
 @admin.route('/users', methods=['GET', 'POST', 'DELETE'])
 @login_required
 def adminUsers():
+    if current_user.name != "Admin":
+        return redirect(url_for('auth.login'))
     if request.method == 'POST':
         name = request.form.get('name')
         password1 = request.form.get('password1')
@@ -39,6 +41,8 @@ def adminUsers():
 @admin.route('/users/delete/<name>', methods=['DELETE'])
 @login_required
 def deleteUser(name):
+    if current_user.name != "Admin":
+        return redirect(url_for('auth.login'))
     user = User.query.filter_by(name=name).first()
     path = user.imgURL
     deleteUserName(name)
@@ -50,6 +54,8 @@ def deleteUser(name):
 @admin.route('/users/edit/<name>', methods=['POST'])
 @login_required
 def editUser(name):
+    if current_user.name != "Admin":
+        return redirect(url_for('auth.login'))
     editName = request.form.get('editName')
     user = User.query.filter_by(name=editName).first()
     if name == editName:
@@ -80,11 +86,15 @@ def editUser(name):
 @admin.route('/sessions', methods=['GET', 'POST'])
 @login_required
 def adminSessions():
+    if current_user.name != "Admin":
+        return redirect(url_for('auth.login'))
     return render_template("admin/adminSessions.html", user = current_user)
 
 @admin.route('/post-events', methods=['GET', 'POST'])
 @login_required
 def adminPostEvents():
+    if current_user.name != "Admin":
+        return redirect(url_for('auth.login'))
     return render_template("admin/adminPostEvents.html", user = current_user)
 
 
