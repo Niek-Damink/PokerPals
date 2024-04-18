@@ -4,8 +4,11 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, logout_user, current_user
 from . import db
 from .dbQueries import *
+from os.path import join, dirname, realpath
+import os
 
 admin = Blueprint('admin', __name__)
+ALLOWED_EXTENSIONS = {'png', 'jpg'}
 
 @admin.route('/users', methods=['GET', 'POST', 'DELETE'])
 @login_required
@@ -36,8 +39,42 @@ def adminUsers():
 @admin.route('/users/delete/<name>', methods=['DELETE'])
 @login_required
 def deleteUser(name):
+    user = User.query.filter_by(name=name).first()
+    path = user.imgURL
     deleteUserName(name)
+    if path != "/pictures/account.png":
+        UPLOADS_PATH = join(dirname(realpath(__file__)), 'static/' + path)
+        os.remove(UPLOADS_PATH)
     return redirect(url_for('admin.adminUsers'))
+
+@admin.route('/users/edit/<name>', methods=['POST'])
+@login_required
+def editUser(name):
+    editName = request.form.get('editName')
+    user = User.query.filter_by(name=editName).first()
+    if name == editName:
+        pass
+    elif user:
+        flash("This username is already in use", category="error")
+    elif len(editName) < 1:
+        editName = name
+    else:
+        User.query.filter(User.name == name).update({User.name: editName}, synchronize_session=False)
+        db.session.commit()
+
+    file = request.files['file']
+    print(file.filename)
+    if(allowed_file(file.filename)):
+        thisUser = User.query.filter_by(name=name).first()
+        fileName = "avatar" + str(thisUser.id) + "." + file.filename.rsplit('.', 1)[1]
+        UPLOADS_PATH = join(dirname(realpath(__file__)), 'static/pictures/' + fileName)
+        file.save(UPLOADS_PATH)
+        User.query.filter(User.name == name).update({User.imgURL: 'pictures/' + fileName}, synchronize_session=False)
+        db.session.commit()
+    else:
+        flash("File is not allowed, allowed formats are png and jpg", "error")
+    return redirect(url_for('admin.adminUsers'))
+
 
 
 @admin.route('/sessions', methods=['GET', 'POST'])
@@ -49,3 +86,8 @@ def adminSessions():
 @login_required
 def adminPostEvents():
     return render_template("admin/adminPostEvents.html", user = current_user)
+
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
