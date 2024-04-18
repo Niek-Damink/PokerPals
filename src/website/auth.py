@@ -49,11 +49,10 @@ def sign_up():
         elif password1 != password2:
             flash('Passwords are not the same', category='error')
         else:
-            new_user = User(name = name, password = generate_password_hash(password1))
+            new_user = User(name = name, password = generate_password_hash(password1), imgURL = "/pictures/pim.jpg")
             db.session.add(new_user)
             db.session.commit()
-            login_user(user, remember=True)
-            flash('Account created!', category='success')
+            login_user(new_user, remember=True)
             return redirect(url_for('views.home'))
     
     return render_template("sign_up.html", user = current_user) 

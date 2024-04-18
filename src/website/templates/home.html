@@ -8,10 +8,18 @@
     <div class="col">
         <ul class="list-group px-4">
             <h5 class="mb-1 p-3">Members:</h5>
-            <li class="list-group-item list-group-item-action">Niek Damink</li>
-            <li class="list-group-item list-group-item-action">Stein Bodde</li>
-            <li class="list-group-item list-group-item-action">Naud Drost</li>
-            <li class="list-group-item list-group-item-action">Pim Meulenkamp</li>
+            {% for name, url in user_list%}
+            <li class="list-group-item list-group-item-action">
+                <div class="row">
+                    <div class="col-auto">
+                        <img class="rounded-circle" src="{{url_for('static', filename= url)}}" width="40px" height="40px">
+                    </div>
+                    <div class="col">
+                        {{ name }}
+                    </div>
+                </div>
+            </li>
+            {% endfor %}
         </ul>
     </div>
     <div class="col-6">

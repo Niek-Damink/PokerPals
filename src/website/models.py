@@ -6,6 +6,7 @@ class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(300))
     text = db.Column(db.String(10000))
+    imgURL = db.Column(db.String(10000))
     date = db.Column(db.DateTime(timezone=True), default=func.now())
 
 class Session(db.Model):
@@ -31,3 +32,11 @@ class User(db.Model, UserMixin):
     name = db.Column(db.String(150), unique=True)
     password = db.Column(db.String(150))
     sessions = db.relationship('Usersession')
+    imgURL = db.Column(db.String(10000))
+
+class Events(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(150), unique=True)
+    date = db.Column(db.String(150))
+
+

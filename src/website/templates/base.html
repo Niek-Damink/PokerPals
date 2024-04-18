@@ -30,7 +30,7 @@
           <div class="collapse navbar-collapse" id="navbarText">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="/">Home</a>
+                <a class="nav-link" href="/">Home</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="/sessions">Sessions</a>
@@ -41,7 +41,7 @@
             </ul>
             <ul class="navbar-nav ml-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link" href="/account"><img src="{{url_for('static', filename='pictures/account.png')}}" width="50px" class="avatar" > Niek Damink</a>
+                    <a class="nav-link" href="/account"><img class='rounded-circle m-2' src="{{url_for('static', filename=user.imgURL)}}" width="60px" height="60px" class="avatar">{{user.name}}</a>
                 </li>
             </ul>
           </div>
