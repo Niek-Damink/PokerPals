@@ -18,6 +18,8 @@ def login():
         if user:
             if check_password_hash(user.password, password):
                 login_user(user, remember=True)
+                if user.name == "Admin":
+                    return redirect(url_for('admin.adminUsers'))
                 return redirect(url_for('views.home'))
             else:
                 flash('Incorrect login information, try again', category='error')

@@ -58,26 +58,23 @@ def editUser(name):
         return redirect(url_for('auth.login'))
     editName = request.form.get('editName')
     user = User.query.filter_by(name=editName).first()
-    if name == editName:
+    if name == editName or len(editName) < 1:
         pass
     elif user:
         flash("This username is already in use", category="error")
-    elif len(editName) < 1:
-        editName = name
     else:
         User.query.filter(User.name == name).update({User.name: editName}, synchronize_session=False)
         db.session.commit()
 
     file = request.files['file']
-    print(file.filename)
     if(allowed_file(file.filename)):
-        thisUser = User.query.filter_by(name=name).first()
+        thisUser = User.query.filter_by(name=editName).first()
         fileName = "avatar" + str(thisUser.id) + "." + file.filename.rsplit('.', 1)[1]
         UPLOADS_PATH = join(dirname(realpath(__file__)), 'static/pictures/' + fileName)
         file.save(UPLOADS_PATH)
         User.query.filter(User.name == name).update({User.imgURL: 'pictures/' + fileName}, synchronize_session=False)
         db.session.commit()
-    else:
+    elif len(file.filename) > 0:
         flash("File is not allowed, allowed formats are png and jpg", "error")
     return redirect(url_for('admin.adminUsers'))
 
