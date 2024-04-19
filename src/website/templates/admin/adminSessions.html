@@ -4,11 +4,110 @@
 <br>
 <br>
 <br>
-<div class="row">
-    <div class="col">
-
+<div class="container w-50">
+<form id="form">
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label>Host</label>
+        <input type="text" class="form-control" id="host" placeholder="Host">
+      </div>
+      <div class="form-group col-md-6">
+        <label>Date</label>
+        <input type="text" class="form-control" id="date" placeholder="Date">
+      </div>
     </div>
-    <div class="col">
-
+    <div class="form-row">
+        <div class="form-group col">
+          <label>Duration</label>
+          <input type="text" class="form-control" id="duration" placeholder="duration">
+        </div>
+        <div class="form-group col">
+          <label>Small blind</label>
+          <input type="text" class="form-control" id="smallblind" placeholder="Small blind">
+        </div>
+        <div class="form-group col">
+            <label>Big blind</label>
+            <input type="text" class="form-control" id="bigblind" placeholder="Big blind">
+          </div>
     </div>
+    <div class="form-row p-2 px-4">
+        <div class="form-check col">
+            <input class="form-check-input" type="checkbox" id="gridCheck">
+            <label class="form-check-label" for="gridCheck">
+              straddle
+            </label>
+        </div>
+        <div class="form-check col">
+            <input class="form-check-input" type="checkbox" id="gridCheck">
+            <label class="form-check-label" for="gridCheck">
+              72
+            </label>
+        </div>
+    </div>
+    <div class="form-row" id="last">
+        <div class="form-group col">
+          <label>Name</label>
+          <input type="text" class="form-control" id="name" placeholder="Name">
+        </div>
+        <div class="form-group col">
+          <label>Begin stack</label>
+          <input type="text" class="form-control" id="begin" placeholder="Begin Stack">
+        </div>
+        <div class="form-group col">
+            <label>Added chips</label>
+            <input type="text" class="form-control" id="added" placeholder="Added chips">
+        </div>
+        <div class="form-group col">
+            <label>End stack</label>
+            <input type="text" class="form-control" id="end" placeholder="End stack">
+        </div>
+    </div>
+  </form>
+  <button onclick="submitForm()" class="btn btn-primary">Add session</button>
+  <button onclick="addPerson()" class="btn btn-secondary">Add person</button>
+  <button onclick="deletePerson()" class="btn btn-danger">Delete person</button>
+</div>
 {% endblock %}
+
+{% block js%}
+
+
+<script>
+    window.onload = function() {
+        resetStorage();
+      };
+
+
+    function addPerson() {
+        value = sessionStorage.getItem("counter")
+        value = Number(value)
+        newValue = String(value + 1)
+        sessionStorage.setItem("counter", newValue)  
+        item = document.getElementById("last")
+        item.id=value
+        id = newValue
+        HTMLSTRING = '<div class="form-row" id="last"><div class="form-group col"><input type="text" class="form-control" id="name'+ id +'" placeholder="Name"></div><div class="form-group col"><input type="text" class="form-control" id="begin'+ id +'" placeholder="Begin Stack"></div><div class="form-group col"><input type="text" class="form-control" id="added'+ id +'" placeholder="Added chips"></div><div class="form-group col"><input type="text" class="form-control" id="end'+ id +'" placeholder="End stack"></div></div>'
+        item.insertAdjacentHTML("afterend", HTMLSTRING)
+    }
+
+    function resetStorage(){
+        sessionStorage.setItem("counter", "1") 
+    }
+
+    function deletePerson() { 
+        value = sessionStorage.getItem("counter")
+        if (value != "1") {
+            item = document.getElementById("last")
+            previous = item.previousSibling 
+            item.remove()
+            previous.id = "last"
+            newValue = String(Number(value) - 1)
+            sessionStorage.setItem("counter", newValue)  
+        }
+    }
+
+    function submitForm(){
+        document.getElementById('form').submit()
+    }
+</script>
+{%endblock%}
