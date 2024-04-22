@@ -26,7 +26,7 @@ def sessions():
         filterOn = "0"
         filterValue = None
         orderOn = "0"
-    return render_template("sessions.html", user = current_user, session_list = getSessionsWithPeopleAndPot(filterOn, filterValue, orderOn), total_statistics = getTotalStatistics())
+    return render_template("sessions.html", user = current_user, session_list = getSessionsWithPeopleAndPot(filterOn, filterValue, orderOn), total_statistics = getTotalStatistics(filterOn, filterValue))
 
 @views.route('/sessions/<id>')
 @login_required

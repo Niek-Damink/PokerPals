@@ -52,8 +52,17 @@ def getSessionsWithPeopleAndPot(filter, value, order):
         sessions.sort(key=lambda x: x.players, reverse=True)
     return sessions
 
-def getTotalStatistics():
-    sessions = Session.query.all()
+def getTotalStatistics(filter, value):
+    if filter == "1" and value != "":
+        sessions = Session.query.filter(Session.host == value).all()
+    elif filter == "2" and value != "":
+        theFilter = "___" + value + "_____"
+        sessions = Session.query.filter(Session.date.like(theFilter)).all()
+    elif filter == "3" and value != "":
+        theFilter = "______" + value
+        sessions = Session.query.filter(Session.date.like(theFilter)).all()
+    else:
+        sessions = Session.query.all()
     total_statistics_dict = {}
     session_count = len(sessions)
     total_statistics_dict["Sessions"] = session_count
@@ -65,10 +74,12 @@ def getTotalStatistics():
         for userSession in userSessions:
             total_in += userSession.begin_stack
             total_added += userSession.added_chips
-    total_statistics_dict["Total in"] = total_in
-    total_statistics_dict["Average in"] = round(total_in/session_count,2)
-    total_statistics_dict["Total added"] = total_added
-    total_statistics_dict["Average added"] = round(total_added/session_count,2)
+    total_statistics_dict["Total buyins"] = total_in
+    total_statistics_dict["Average buyin"] = round(total_in/session_count,2)
+    total_statistics_dict["Total added chips"] = total_added
+    total_statistics_dict["Average added chips"] = round(total_added/session_count,2)
+    total_statistics_dict["Total chips"] = total_added + total_in
+    total_statistics_dict["Average chips"] = round((total_added + total_in)/session_count,2)
     return total_statistics_dict
     
 def getSessionInformation(id):
