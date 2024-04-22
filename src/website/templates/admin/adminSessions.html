@@ -5,29 +5,31 @@
 <br>
 <br>
 <div class="container w-50">
-<form id="form" method="POST" action="/admin/addSession">
+<h3 align="center">Add a session</h3>
+<form id="form" method="POST" action="/admin/sessions/addSession">
+    <h5 class="mb-1 py-3">Session</h5>
     <div class="form-row">
       <div class="form-group col-md-6">
         <label>Host</label>
-        <input type="text" class="form-control" name="host" id="host" placeholder="Host">
+        <input type="text" onkeyup='saveValue(this)' class="form-control" name="host" id="host" placeholder="Host">
       </div>
       <div class="form-group col-md-6">
         <label>Date</label>
-        <input type="text" class="form-control" name="date" id="date" placeholder="Date">
+        <input type="text" onkeyup='saveValue(this)' class="form-control" name="date" id="date" placeholder="DD-MM-YYYY">
       </div>
     </div>
     <div class="form-row">
         <div class="form-group col">
           <label>Duration</label>
-          <input type="text" class="form-control" name="duration" id="duration" placeholder="duration">
+          <input type="text" onkeyup='saveValue(this)' class="form-control" name="duration" id="duration" placeholder="duration">
         </div>
         <div class="form-group col">
           <label>Small blind</label>
-          <input type="text" class="form-control" name="smallblind" id="smallblind" placeholder="Small blind">
+          <input type="text" onkeyup='saveValue(this)' class="form-control" name="smallblind" id="smallblind" placeholder="Small blind">
         </div>
         <div class="form-group col">
             <label>Big blind</label>
-            <input type="text" class="form-control" name="bigblind" id="bigblind" placeholder="Big blind">
+            <input type="text" onkeyup='saveValue(this)' class="form-control" name="bigblind" id="bigblind" placeholder="Big blind">
           </div>
     </div>
     <div class="form-row p-2 px-4">
@@ -44,22 +46,23 @@
             </label>
         </div>
     </div>
+    <h5 class="mb-1 py-3">Participants</h5>
     <div class="form-row" id="last">
         <div class="form-group col">
           <label>Name</label>
-          <input type="text" class="form-control" name="name1" id="name1" placeholder="Name">
+          <input type="text" onkeyup='saveValue(this)' class="form-control" name="name1" id="name1" placeholder="Name">
         </div>
         <div class="form-group col">
           <label>Begin stack</label>
-          <input type="text" class="form-control" name="begin1" id="begin1" placeholder="Begin Stack">
+          <input type="text" onkeyup='saveValue(this)' class="form-control" name="begin1" id="begin1" placeholder="Begin Stack">
         </div>
         <div class="form-group col">
             <label>Added chips</label>
-            <input type="text" class="form-control" name="added1" id="added1" placeholder="Added chips">
+            <input type="text" onkeyup='saveValue(this)' class="form-control" name="added1" id="added1" placeholder="Added chips">
         </div>
         <div class="form-group col">
             <label>End stack</label>
-            <input type="text" class="form-control" name="end1" id="end1" placeholder="End stack">
+            <input type="text" onkeyup='saveValue(this)' class="form-control" name="end1" id="end1" placeholder="End stack">
         </div>
     </div>
   </form>
@@ -71,14 +74,49 @@
 </div>
 {% endblock %}
 
-{% block js%}
 
+{% block jsTop%}
 
 <script>
-    window.onload = function() {
-        resetStorage();
-      };
+    document.addEventListener("DOMContentLoaded", function() {
+        loadPage()
+    });
 
+    function loadPage(){
+        var doReset = "{{do_reset}}"
+        if (doReset == "True"){
+            sessionStorage.clear()
+        }
+        formHTML = sessionStorage.getItem("form")
+        if (formHTML != null) {
+            form = document.getElementById('form')
+            form.innerHTML = formHTML
+            putSavedValues()
+        }
+        else {
+            sessionStorage.setItem("form", form.innerHTML) 
+            sessionStorage.setItem("counter", "1") 
+        }
+    }
+
+    function putSavedValues() {
+        value = Number(sessionStorage.getItem("counter"))
+        document.getElementById("host").value = sessionStorage.getItem("host")
+        document.getElementById("date").value = sessionStorage.getItem("date")
+        document.getElementById("duration").value = sessionStorage.getItem("duration")
+        document.getElementById("smallblind").value = sessionStorage.getItem("smallblind")
+        document.getElementById("bigblind").value = sessionStorage.getItem("bigblind")
+        for (let i = 1; i < value+1; i++) {
+            document.getElementById("name" + i).value = sessionStorage.getItem("name" + i)
+            document.getElementById("begin" + i).value = sessionStorage.getItem("begin" + i)
+            document.getElementById("added" + i).value = sessionStorage.getItem("added" + i)
+            document.getElementById("end" + i).value = sessionStorage.getItem("end" + i)
+        }
+    }
+
+    function saveValue(e){
+        sessionStorage.setItem(e.id, e.value)
+    }
 
     function addPerson() {
         value = sessionStorage.getItem("counter")
@@ -88,12 +126,10 @@
         item = document.getElementById("last")
         item.id=value
         id = newValue
-        HTMLSTRING = '<div class="form-row" id="last"><div class="form-group col"><input type="text" class="form-control" name="name"'+ id +' id="name'+ id +'" placeholder="Name"></div><div class="form-group col"><input type="text" class="form-control" name="begin"'+ id +' id="begin'+ id +'" placeholder="Begin Stack"></div><div class="form-group col"><input type="text" class="form-control" name="added"'+ id +' id="added'+ id +'" placeholder="Added chips"></div><div class="form-group col"><input type="text" class="form-control" name="end"'+ id +' id="end'+ id +'" placeholder="End stack"></div></div>'
+        HTMLSTRING = '<div class="form-row" id="last"><div class="form-group col"><input type="text" onkeyup="saveValue(this)" class="form-control" name="name'+ id +'" id="name'+ id +'" placeholder="Name"></div><div class="form-group col"><input type="text" onkeyup="saveValue(this)" class="form-control" name="begin'+ id +'" id="begin'+ id +'" placeholder="Begin Stack"></div><div class="form-group col"><input type="text" onkeyup="saveValue(this)" class="form-control" name="added'+ id +'" id="added'+ id +'" placeholder="Added chips"></div><div class="form-group col"><input type="text" class="form-control" onkeyup="saveValue(this)" name="end'+ id +'" id="end'+ id +'" placeholder="End stack"></div></div>'
         item.insertAdjacentHTML("afterend", HTMLSTRING)
-    }
-
-    function resetStorage(){
-        sessionStorage.setItem("counter", "1") 
+        form = document.getElementById('form')
+        sessionStorage.setItem("form", form.innerHTML) 
     }
 
     function deletePerson() { 
@@ -104,12 +140,17 @@
             item.remove()
             previous.id = "last"
             newValue = String(Number(value) - 1)
-            sessionStorage.setItem("counter", newValue)  
+            sessionStorage.setItem("counter", newValue) 
+            form = document.getElementById('form')
+            sessionStorage.setItem("form", form.innerHTML) 
         }
     }
 
     function submitForm(){
-        document.getElementById('form').submit()
+        form = document.getElementById('form')
+        sessionStorage.setItem("form", form.innerHTML)
+        form.action += "/" + sessionStorage.getItem("counter")
+        form.submit()
     }
 </script>
 {%endblock%}
