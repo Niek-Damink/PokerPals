@@ -5,21 +5,21 @@
         <div class="form-row align-items-center">
             <div class="col m-3">
                 <label class="mr-sm-2" for="filter">Filter on</label>
-                <select class="custom-select mr-sm-2" name="filter" id="filter">
-                    <option selected value="0">All</option>
-                    <option value="1">Host</option>
-                    <option value="2">Month</option>
-                    <option value="3">Year</option>
+                <select onchange="saveChoice(this, 'active1');" class="custom-select mr-sm-2" name="filter" id="filter">
+                    <option id="f0" selected value="0">All</option>
+                    <option id="f1" value="1">Host</option>
+                    <option id="f2" value="2">Month</option>
+                    <option id="f3" value="3">Year</option>
                 </select>
             </div>
             <div class="col-auto m-3">
                 <label class="mr-sm-2" for="input Value">Value</label>
-                <input type="text" class="form-control" name="inputValue" id="inputValue" placeholder="Value">
+                <input type="text" onkeyup="saveValue(this)" class="form-control" name="inputValue" id="inputValue" placeholder="Value">
                 </div>
 
             <div class="col m-3">
                 <label class="mr-sm-2" for="order">Order on</label>
-                <select class="custom-select mr-sm-2" name="order" id="order">
+                <select onchange="saveChoice(this, 'active2');" class="custom-select mr-sm-2" name="order" id="order">
                     <option selected value="0">Date</option>
                     <option value="1">Time</option>
                     <option value="2">Potsize</option>
@@ -96,3 +96,28 @@
     </div>
 </div>
 {% endblock %}
+
+{% block js%}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        loadDocument()
+    });
+
+    function loadDocument(){
+        active1 = window.sessionStorage.getItem("active1")
+        active2 = window.sessionStorage.getItem("active2")
+        value = window.sessionStorage.getItem("inputValue")
+        document.getElementById("filter").selectedIndex = active1
+        document.getElementById("order").selectedIndex = active2
+        document.getElementById("inputValue").value = value
+    }
+
+    function saveChoice(element, form){
+        window.sessionStorage.setItem(form, element.selectedIndex)
+    }
+
+    function saveValue(element){
+        window.sessionStorage.setItem(element.id, element.value)
+    }
+</script>
+{% endblock%}

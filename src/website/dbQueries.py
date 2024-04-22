@@ -27,10 +27,10 @@ def getSessionsWithPeopleAndPot(filter, value, order):
     if filter == "1" and value != "":
         sessions = Session.query.filter(Session.host == value).all()
     elif filter == "2" and value != "":
-        theFilter = "%" + value + "%"
+        theFilter = "___" + value + "_____"
         sessions = Session.query.filter(Session.date.like(theFilter)).all()
     elif filter == "3" and value != "":
-        theFilter = "%" + value
+        theFilter = "______" + value
         sessions = Session.query.filter(Session.date.like(theFilter)).all()
     else:
         sessions = Session.query.all()

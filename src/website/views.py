@@ -22,6 +22,10 @@ def sessions():
         filterOn = request.form.get("filter")
         filterValue = request.form.get("inputValue")
         orderOn = request.form.get("order")
+    else:
+        filterOn = "0"
+        filterValue = None
+        orderOn = "0"
     return render_template("sessions.html", user = current_user, session_list = getSessionsWithPeopleAndPot(filterOn, filterValue, orderOn), total_statistics = getTotalStatistics())
 
 @views.route('/sessions/<id>')
