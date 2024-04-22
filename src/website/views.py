@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, request
 from flask_login import login_user, login_required, logout_user, current_user
 from .dbQueries import *
 
@@ -15,10 +15,14 @@ def home():
 def account():
     return render_template("account.html", user = current_user)
 
-@views.route('/sessions')
+@views.route('/sessions', methods=['GET', 'POST'])
 @login_required
 def sessions():
-    return render_template("sessions.html", user = current_user, session_list = getSessionsWithPeopleAndPot(), total_statistics = getTotalStatistics())
+    if request.method == "POST":
+        filterOn = request.form.get("filter")
+        filterValue = request.form.get("inputValue")
+        orderOn = request.form.get("order")
+    return render_template("sessions.html", user = current_user, session_list = getSessionsWithPeopleAndPot(filterOn, filterValue, orderOn), total_statistics = getTotalStatistics())
 
 @views.route('/sessions/<id>')
 @login_required

@@ -23,8 +23,17 @@ def getMaxSessionID():
         max_session_id = max_session.session_ID + 1
     return max_session_id
 
-def getSessionsWithPeopleAndPot():
-    sessions = Session.query.all()
+def getSessionsWithPeopleAndPot(filter, value, order):
+    if filter == "1" and value != "":
+        sessions = Session.query.filter(Session.host == value).all()
+    elif filter == "2" and value != "":
+        theFilter = "%" + value + "%"
+        sessions = Session.query.filter(Session.date.like(theFilter)).all()
+    elif filter == "3" and value != "":
+        theFilter = "%" + value
+        sessions = Session.query.filter(Session.date.like(theFilter)).all()
+    else:
+        sessions = Session.query.all()
     for session in sessions:
         total = 0
         userSessions = User_Session.query.filter(User_Session.session_ID == session.session_ID)
@@ -33,6 +42,14 @@ def getSessionsWithPeopleAndPot():
             total += userSession.end_stack
         session.players = players
         session.pot = total
+    if order == "0":
+        sessions.sort(key=lambda x: x.session_ID, reverse=True)
+    elif order == "1":
+        sessions.sort(key=lambda x: x.duration, reverse=True)
+    elif order == "2":
+        sessions.sort(key=lambda x: x.pot, reverse=True)
+    else:
+        sessions.sort(key=lambda x: x.players, reverse=True)
     return sessions
 
 def getTotalStatistics():
