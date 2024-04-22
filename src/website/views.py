@@ -20,6 +20,13 @@ def account():
 def sessions():
     return render_template("sessions.html", user = current_user, session_list = getSessionsWithPeopleAndPot(), total_statistics = getTotalStatistics())
 
+@views.route('/sessions/<id>')
+@login_required
+def sessionOverview(id):
+    session_information, enters = getSessionInformation(id)
+    return render_template("sessionOverview.html", user = current_user, session_information = session_information, enters = enters)
+
+
 @views.route('/leaderboard')
 @login_required
 def leaderboard():

@@ -1,3 +1,58 @@
 {% extends "base.html" %} {% block title %}Leaderboard{% endblock %} {% block content %}
-<p>Session overview</p>
+<div class="container p-5">
+    <h3 align="center">Session overview of session {{session_information[0].session_ID}}</h3><br>
+    <div class="row">
+        {%for user in session_information%}
+        {%if enters[user.person_name]%}
+        </div>
+        <div class="row">
+        {%endif%}
+        <div class="col">
+            <h5 align="center" class="mb-1 py-3">{{user.person_name}}</h5>
+            <table class="table table-striped">
+                <tbody>
+                    <tr>
+                        <td>Begin stack</td>
+                        <td>{{user.begin_stack}}</td>
+                    </tr>
+                    <tr>
+                        <td>Added chips</td>
+                        <td>{{user.added_chips}}</td>
+                    </tr>
+                    <tr>
+                        <td>End stack</td>
+                        <td>{{user.end_stack}}</td>
+                    </tr>
+                    <tr>
+                        <td>Result</td>
+                        <td name="total">{{user.end_stack - user.begin_stack - user.added_chips}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        {%endfor%}
+</div>
+</div>
+{% endblock %}
+
+{%block js%}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        MakeNegative()
+    });
+
+    function MakeNegative() {
+        TDs = document.getElementsByName('total');
+        for (i=0; i<TDs.length; i++) {
+                temp = TDs[i];
+                if (temp.firstChild.nodeValue.indexOf('-') == 0){
+                    temp.className = "text-danger";
+                } 
+                else {
+                    temp.className = "text-success";
+                }
+            }
+    }
+</script>
 {% endblock %}

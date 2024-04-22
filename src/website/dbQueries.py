@@ -49,8 +49,19 @@ def getTotalStatistics():
             total_in += userSession.begin_stack
             total_added += userSession.added_chips
     total_statistics_dict["Total in"] = total_in
-    total_statistics_dict["Average in"] = total_in/session_count
+    total_statistics_dict["Average in"] = round(total_in/session_count,2)
     total_statistics_dict["Total added"] = total_added
-    total_statistics_dict["Average added"] = total_added/session_count
+    total_statistics_dict["Average added"] = round(total_added/session_count,2)
     return total_statistics_dict
     
+def getSessionInformation(id):
+    user_sessions = User_Session.query.filter(User_Session.session_ID == id)
+    enters = {}
+    i = 0
+    for user in user_sessions:
+        if i%2 == 0 and i != 0:
+            enters[user.person_name] = True
+        else:
+            enters[user.person_name] = False
+        i += 1
+    return user_sessions, enters
