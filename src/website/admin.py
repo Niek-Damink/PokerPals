@@ -123,6 +123,8 @@ def adminAddSession(amount):
         return redirect(url_for('admin.adminSessions'))
     person_session = []
     used_names = []
+    total_in = 0
+    total_out = 0
     for id in range(1, int(amount) + 1):
         id = str(id)
         name = request.form.get('name' + id)
@@ -142,7 +144,12 @@ def adminAddSession(amount):
         else:
             person_session.append((name, begin_stack, added_stack, end_stack))
             used_names.append(name)
+            total_in += float(begin_stack) + float(added_stack)
+            total_out += float(end_stack)
             continue
+        return redirect(url_for('admin.adminSessions'))
+    if (total_in != total_out):
+        flash("The total amount of money going in and out is not equal", "error")
         return redirect(url_for('admin.adminSessions'))
     global do_reset; do_reset = True
     session_ID = getMaxSessionID()
