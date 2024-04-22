@@ -1,3 +1,52 @@
 {% extends "base.html" %} {% block title %}Leaderboard{% endblock %} {% block content %}
-<p>Leaderboard</p>
+<div class="container py-4">
+    <h3 align="center">Pokerpals Leaderboard!</h3><br>
+    <table class="table">
+        <caption>Only players who have played a minimum of three sessions are on the leaderboard!</caption>
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Average Session Result</th>
+            <th scope="col">Average Hour Result</th>
+            <th scope="col">Played Sessions</th>
+            <th scope="col">Total Session Result</th>
+          </tr>
+        </thead>
+        <tbody>
+            {%for person in leaderboard%}
+          <tr>
+            <td>{{person[0]}}</td>
+            <td>{{person[1]}}</td>
+            <td name="number">{{person[2]}}</td>
+            <td name="number">{{person[3]}}</td>
+            <td>{{person[4]}}</td>
+            <td name="number">{{person[5]}}</td>
+          </tr>
+          {%endfor%}
+        </tbody>
+      </table>
+      
+</div>
+{% endblock %}
+
+{%block js%}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        MakeNegative()
+    });
+
+    function MakeNegative() {
+        TDs = document.getElementsByName('number');
+        for (i=0; i<TDs.length; i++) {
+                temp = TDs[i];
+                if (temp.firstChild.nodeValue.indexOf('-') == 0){
+                    temp.className = "text-danger";
+                } 
+                else {
+                    temp.className = "text-success";
+                }
+            }
+    }
+</script>
 {% endblock %}
