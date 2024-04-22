@@ -18,7 +18,7 @@ def account():
 @views.route('/sessions')
 @login_required
 def sessions():
-    return render_template("sessions.html", user = current_user)
+    return render_template("sessions.html", user = current_user, session_list = getSessionsWithPeopleAndPot(), total_statistics = getTotalStatistics())
 
 @views.route('/leaderboard')
 @login_required

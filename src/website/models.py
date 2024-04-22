@@ -11,6 +11,7 @@ class Post(db.Model):
 
 class Session(db.Model):
     session_ID = db.Column(db.Integer, primary_key=True)
+    host = db.Column(db.String(100))
     date = db.Column(db.String(100))
     duration = db.Column(db.Integer)
     straddle = db.Column(db.Boolean)

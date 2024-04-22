@@ -1,4 +1,4 @@
-from .models import User, Session
+from .models import User, Session, User_Session
 from . import db
 from sqlalchemy import func
 
@@ -16,10 +16,41 @@ def deleteUserName(name):
     return
 
 def getMaxSessionID():
-    max_session = Session.query.order_by(Session.session_ID.desc()).first().session_ID + 1
-    if (max_session == None):
-        max_session = 1
-    print(max_session)
-    return max_session
+    max_session = Session.query.order_by(Session.session_ID.desc()).first()
+    if max_session == None:
+        max_session_id = 1
+    else:
+        max_session_id = max_session.session_ID + 1
+    return max_session_id
 
+def getSessionsWithPeopleAndPot():
+    sessions = Session.query.all()
+    for session in sessions:
+        total = 0
+        userSessions = User_Session.query.filter(User_Session.session_ID == session.session_ID)
+        players = userSessions.count()
+        for userSession in userSessions:
+            total += userSession.end_stack
+        session.players = players
+        session.pot = total
+    return sessions
+
+def getTotalStatistics():
+    sessions = Session.query.all()
+    total_statistics_dict = {}
+    session_count = len(sessions)
+    total_statistics_dict["Sessions"] = session_count
+
+    total_in = 0
+    total_added = 0
+    for session in sessions:
+        userSessions = User_Session.query.filter(User_Session.session_ID == session.session_ID)
+        for userSession in userSessions:
+            total_in += userSession.begin_stack
+            total_added += userSession.added_chips
+    total_statistics_dict["Total in"] = total_in
+    total_statistics_dict["Average in"] = total_in/session_count
+    total_statistics_dict["Total added"] = total_added
+    total_statistics_dict["Average added"] = total_added/session_count
+    return total_statistics_dict
     

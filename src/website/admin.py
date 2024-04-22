@@ -153,7 +153,7 @@ def adminAddSession(amount):
         return redirect(url_for('admin.adminSessions'))
     global do_reset; do_reset = True
     session_ID = getMaxSessionID()
-    new_session = Session(session_ID = session_ID, date=the_date, duration = the_duration, small_blind = the_small_blind, big_blind = the_big_blind, straddle = is_straddle, seven_deuce = is_seven_deuce)
+    new_session = Session(host=host, session_ID = session_ID, date=the_date, duration = the_duration, small_blind = the_small_blind, big_blind = the_big_blind, straddle = is_straddle, seven_deuce = is_seven_deuce)
     db.session.add(new_session)
     for person in person_session:
         new_person_session = User_Session(session_ID = session_ID, begin_stack = person[1], added_chips = person[2], end_stack = person[3], person_name = person[0])

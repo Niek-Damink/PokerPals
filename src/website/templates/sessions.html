@@ -1,3 +1,68 @@
 {% extends "base.html" %} {% block title %}Sessions{% endblock %} {% block content %}
-<p>Sessions</p>
+<div class="fluid-container p-5">
+    <h3 align="center">Session overview</h3><br>
+    <div class="row">
+        <div class="col">
+            <table class="table">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Session</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Host</th>
+                        <th scope="col">Duration</th>
+                        <th scope="col">SB</th>
+                        <th scope="col">BB</th>
+                        <th scope="col">72</th>
+                        <th scope="col">Straddle</th>
+                        <th scope="col">Players</th>
+                        <th scope="col">Total pot</th>
+                        <th scope="col">Link</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for session in session_list%}
+                    <tr>
+                        <th scope="row">{{session.session_ID}}</th>
+                        <td>{{session.date}}</td>
+                        <td>{{session.host}}</td>
+                        <td>{{session.duration}}</td>
+                        <td>{{session.small_blind}}</td>
+                        <td>{{session.big_blind}}</td>
+                        {%if session.seven_deuce%}
+                        <td>On</td>
+                        {%else%}
+                        <td>Off</td>
+                        {%endif%}
+                        {%if session.straddle%}
+                        <td>On</td>
+                        {%else%}
+                        <td>Off</td>
+                        {%endif%}
+                        <td>{{session.players}}</td>
+                        <td>{{session.pot}}</td>
+                        <td><a href="/sessions/{{session.session_ID}}">Results</a></td>
+                    </tr>
+                    {%endfor%}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="column">
+            <table class="table">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Feature</th>
+                        <th scope="col">Amount</th>
+                    </tr>
+                    {%for feature, amount in total_statistics.items()%}
+                    <tr>
+                        <td>{{feature}}</td>
+                        <td>{{amount}}</td>
+                    </tr>
+                    {%endfor%}
+                </thead>
+                <tbody>
+        </div>
+    </div>
+</div>
 {% endblock %}
