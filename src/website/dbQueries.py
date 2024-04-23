@@ -167,4 +167,8 @@ def getMaxPostID():
     else:
         max_session_id = max_post.id + 1
     return max_session_id
+
+def getPosts():
+    all_posts = Post.query.all()
+    return all_posts
             

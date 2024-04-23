@@ -26,42 +26,24 @@
     </div>
     <div class="col-6">
         <div class="list-group">
+            {%for post in post_list%}
             <a class="list-group-item list-group-item-action flex-column align-items-start">
                 <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">Casino avond met de boys</h5>
-                    <small class="text-muted">1 day ago</small>
-                </div>
-                <p class="mb-1">Afgelopen week zijn we lekker met de boyz naar het casino gegaan. Niekje heeft ofcourse
-                    10k gepakt</p>
-            </a>
-            <a class="list-group-item list-group-item-action flex-column align-items-start">
-                <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">Poker Avondje</h5>
-                    <small class="text-muted">10-04-2024</small>
-                </div>
-                <p class="mb-1">Afgelopen weekend was de gezellige pokeravond gehost bij stein! Was erg gezellig, maar
-                    nadat Pim 2 flessen whisky op had is hij knockout gegaan</p>
-            </a>
-            <a class="list-group-item list-group-item-action flex-column align-items-start">
-                <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">Pokeravond Lonneker</h5>
+                    <h5 class="mb-1">{{post.title}}</h5>
                     <small class="text-muted">20-03-2024</small>
                 </div>
                 <div class="row">
                     <div class="col">
-                        <p class="mb-1">Afgelopen vrijdag zijn de PokerPals in lonneker geweest voor het ONKP.
-                            Het was een gezellige avond waar we nog bekenden zijn tegengekomen uit Losser. Het was naast
-                            een gezellige avond ook een succesvolle avond. Niek en Stein zijn bij de laatste 2 tafels
-                            gekomen.
-                            d Niek is geëindigd op de 9de plek en Stein is 11de geworden. Dit staat gelijk aan een
-                            kwartfinale ticket voor beide.
-                            Dus de PokerPals zullen vaker te zien zijn bij het ONKP!</p>
+                        <p class="mb-1">{{post.text}}</p>
                     </div>
+                    {%if post.imgURL != "NoPicture"%}
                     <div class="col-auto">
-                        <img src="{{url_for('static', filename='pictures/pim.jpg')}}" width="120px">
+                        <img src="{{url_for('static', filename=post.imgURL)}}" width="120px">
                     </div>
+                    {%endif%}
                 </div>
             </a>
+            {%endfor%}
         </div>
     </div>
     <div class="col">

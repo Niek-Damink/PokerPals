@@ -189,7 +189,7 @@ def adminAddPost():
     print(date)
     id = getMaxPostID()
     if(allowed_file(file.filename)):
-        fileName = "post" + str(id)
+        fileName = "post" + str(id) + "." + file.filename.rsplit('.', 1)[1]
         UPLOADS_PATH = join(dirname(realpath(__file__)), 'static/pictures/' + fileName)
         file.save(UPLOADS_PATH)
         new_post = Post(id=id, imgURL="pictures/" + fileName, title = title, text = text, date = date)
@@ -205,7 +205,6 @@ def adminAddPost():
         db.session.commit()
         flash("Succesfully created post")  
     return redirect(url_for("admin.adminPostEvents"))
-
 
 
 def allowed_file(filename):
