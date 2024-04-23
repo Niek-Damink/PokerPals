@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for, session
-from .models import User, Session, User_Session, Post
+from .models import User, Session, User_Session, Post, Events
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, logout_user, current_user
 from . import db
@@ -206,6 +206,23 @@ def adminAddPost():
         flash("Succesfully created post")  
     return redirect(url_for("admin.adminPostEvents"))
 
+@admin.route('/post-events/add-event', methods=['POST'])
+@login_required
+def adminAddEvent():
+    event_name = request.form.get('event_name')
+    date = request.form.get('date')
+    the_date = date
+    date = date.split("-")
+    if len(event_name) == 0:
+        flash("Pleas fill in a name for the event", "error")
+        return redirect(url_for('admin.adminPostEvents'))
+    elif len(date) != 3 or not date[0].isdigit() or not date[1].isdigit() or not date[2].isdigit() or len(date[0]) != 2 or len(date[1]) != 2 or len(date[2]) != 4:
+        flash("Please fill in a correct date (DD-MM-YYYY)", "error")
+        return redirect(url_for('admin.adminPostEvents'))
+    new_event = Events(date = the_date, name = event_name)
+    db.session.add(new_event)
+    flash("Successfully added new Event")
+    return redirect(url_for('admin.adminPostEvents'))
 
 def allowed_file(filename):
     return '.' in filename and \
