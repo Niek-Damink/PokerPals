@@ -2,16 +2,14 @@
 
 <div class="row py-5 px-4">
     <div class="col-xl-6 mx-auto">
-
-        <!-- Profile widget -->
         <div class="bg-white shadow rounded overflow-hidden">
             <div class="px-4 pt-0 pb-4 bg-dark">
                 <div class="media align-items-end profile-header">
                     <div class="profile mr-3 py-4"><img class='rounded-circle m-2'
-                            src="{{url_for('static', filename=account.imgURL)}}" width="100px" height="100px"
+                            src="{{url_for('static', filename=account['imgURL'])}}" width="100px" height="100px"
                             class="avatar"></div>
                     <div class="media-body mb-5 text-white">
-                        <h4 class="mt-0 mb-0">{{account.name}}</h4>
+                        <h4 class="mt-0 mb-0">{{account["name"]}}</h4>
                         <p class="small mb-4"> Poker pro </p>
                     </div>
                 </div>
@@ -20,7 +18,7 @@
             <div class="bg-light p-4 d-flex justify-content-end text-center">
                 <ul class="list-inline mb-0">
                     <li class="list-inline-item">
-                        <h5 class="font-weight-bold mb-0 d-block">€200</h5><small class="text-muted">Profit</small>
+                        <h5 class="font-weight-bold mb-0 d-block">€{{account["profit"]}}</h5><small class="text-muted">Profit</small>
                     </li>
                     <li class="list-inline-item">
                         <h5 class="font-weight-bold mb-0 d-block">5</h5><small class="text-muted">Sessions</small>
@@ -34,21 +32,45 @@
                 </div>
                 <div class="row">
                     <div class="col">
-                        <table class="table table-secondary">
+                        <table class="table table-striped table-primary">
                             <tbody>
                                 <tr>
-                                    <td>Total beginstack</td>
-                                    <td>500</td>
+                                    <td>Total Beginstack</td>
+                                    <td>{{account["total_beginstack"]}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Total Added Chips</td>
+                                    <td>{{account["total_added_chips"]}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Total Endstack</td>
+                                    <td>{{account["total_endstack"]}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Average Profit</td>
+                                    <td>{{account["average_profit"]}}</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                     <div class="col">
-                        <table class="table table-secondary">
+                        <table class="table table-striped table-primary">
                             <tbody>
                                 <tr>
-                                    <td>Average beginstack</td>
-                                    <td>100</td>
+                                    <td>Average Beginstack</td>
+                                    <td>{{account["average_beginstack"]}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Average Added Chips</td>
+                                    <td>{{account["average_added_chips"]}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Average Endstack</td>
+                                    <td>{{account["average_endstack"]}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Profit Per Hour</td>
+                                    <td>{{account["profit_hour"]}}</td>
                                 </tr>
                             </tbody>
                         </table>
