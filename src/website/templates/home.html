@@ -6,26 +6,27 @@
 <br>
 <div class="row">
     <div class="col">
-        <div class="sticky-top">
-        <ul class="list-group px-4">
-            <h5 class="mb-1 p-3">Members:</h5>
-            <div class="overflow-auto" style="max-height: 500px;">
-            {% for name, url in user_list%}
-            <li class="list-group-item list-group-item-action">
-                <a class="text-reset" href="/account/{{name}}">
-                <div class="row">
-                    <div class="col-auto">
-                        <img class="rounded-circle" src="{{url_for('static', filename= url)}}" width="40px" height="40px">
-                    </div>
-                    <div class="col">
-                        {{ name }}
-                    </div>
+        <div class="position-fixed">
+            <ul class="list-group px-5">
+                <h5 class="mb-1 p-3">Members:</h5>
+                <div class="overflow-auto" style="max-height: 400px;">
+                    {% for name, url in user_list%}
+                    <li class="list-group-item list-group-item-action">
+                        <a class="text-reset" href="/account/{{name}}">
+                            <div class="row">
+                                <div class="col-auto">
+                                    <img class="rounded-circle" src="{{url_for('static', filename= url)}}" width="40px"
+                                        height="40px">
+                                </div>
+                                <div class="col">
+                                    {{ name }}
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    {% endfor %}
                 </div>
-                </a>
-            </li>
-            {% endfor %}
-            </div>
-        </ul>
+            </ul>
         </div>
     </div>
     <div class="col-6">
@@ -51,18 +52,20 @@
         </div>
     </div>
     <div class="col">
-        <div class="sticky-top">
-        <div class="list-group px-4">
-            <h5 class="mb-1 p-3">Upcoming events:</h5>
-            {%for event in event_list%}
-            <a class="list-group-item list-group-item-action flex-column align-items-start">
-                <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">{{event.name}}</h5>
+        <div class="position-fixed">
+            <div class="list-group px-5">
+                <h5 class="mb-1 p-3">Upcoming events:</h5>
+                <div class="overflow-auto" style="max-height: 400px;">
+                    {%for event in event_list%}
+                    <a class="list-group-item list-group-item-action flex-column align-items-start">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">{{event.name}}</h5>
+                        </div>
+                        <small class="text-muted">{{event.date}}</small>
+                    </a>
+                    {%endfor%}
                 </div>
-                <small class="text-muted">{{event.date}}</small>
-            </a>
-            {%endfor%}
-        </div>
+            </div>
         </div>
     </div>
     {% endblock %}
