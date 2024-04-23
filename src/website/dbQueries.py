@@ -1,4 +1,4 @@
-from .models import User, Session, User_Session
+from .models import User, Session, User_Session, Post
 from . import db
 from sqlalchemy import func
 
@@ -160,5 +160,11 @@ def get_account_information(name):
     
     return account_dict
 
-
+def getMaxPostID():
+    max_post = Post.query.order_by(Post.id.desc()).first()
+    if max_post == None:
+        max_session_id = 1
+    else:
+        max_session_id = max_post.id + 1
+    return max_session_id
             

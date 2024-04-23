@@ -1,11 +1,12 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for, session
-from .models import User, Session, User_Session
+from .models import User, Session, User_Session, Post
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, logout_user, current_user
 from . import db
 from .dbQueries import *
 from os.path import join, dirname, realpath
 import os
+import datetime
 
 admin = Blueprint('admin', __name__)
 ALLOWED_EXTENSIONS = {'png', 'jpg'}
@@ -163,12 +164,47 @@ def adminAddSession(amount):
     return redirect(url_for('admin.adminSessions'))
     
 
-@admin.route('/post-events', methods=['GET', 'POST'])
+@admin.route('/post-events', methods=['GET'])
 @login_required
 def adminPostEvents():
     if current_user.name != "Admin":
         return redirect(url_for('auth.login'))
     return render_template("admin/adminPostEvents.html", user = current_user)
+
+@admin.route('/post-events/add-post', methods=['POST'])
+@login_required
+def adminAddPost():
+    if current_user.name != "Admin":
+        return redirect(url_for('auth.login'))
+    file = request.files['file']
+    title = request.form.get('title')
+    text = request.form.get('text')
+    if len(title) == 0:
+        flash("Please enter a title", "error")
+        return redirect(url_for("admin.adminPostEvents"))
+    elif len(text) == 0:
+        flash("Pleas enter some text", "error")
+        return redirect(url_for("admin.adminPostEvents"))
+    date = datetime.datetime.today().strftime('%m/%d/%Y')
+    print(date)
+    id = getMaxPostID()
+    if(allowed_file(file.filename)):
+        fileName = "post" + str(id)
+        UPLOADS_PATH = join(dirname(realpath(__file__)), 'static/pictures/' + fileName)
+        file.save(UPLOADS_PATH)
+        new_post = Post(id=id, imgURL="pictures/" + fileName, title = title, text = text, date = date)
+        db.session.add(new_post)
+        db.session.commit()
+        flash("Succesfully created post with picture")
+    elif len(file.filename) > 0:
+        flash("File is not allowed, allowed formats are png and jpg", "error")  
+        return redirect(url_for("admin.adminPostEvents"))
+    else:
+        new_post = Post(id=id, imgURL="NoPicture", title = title, text = text, date = date)
+        db.session.add(new_post)
+        db.session.commit()
+        flash("Succesfully created post")  
+    return redirect(url_for("admin.adminPostEvents"))
 
 
 
