@@ -25,7 +25,7 @@
                     </tr>
                     <tr>
                         <td>Result</td>
-                        <td name="total">{{user.end_stack - user.begin_stack - user.added_chips}}</td>
+                        <td name="total">{{(user.end_stack - user.begin_stack - user.added_chips) | round(2)}}</td>
                     </tr>
                 </tbody>
             </table>

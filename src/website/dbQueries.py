@@ -143,7 +143,7 @@ def get_account_information(name):
     account_dict = {}
     account_dict["name"] = name
     account_dict["imgURL"] = user.imgURL
-    account_dict["profit"] = profit
+    account_dict["profit"] = round(profit, 2)
     account_dict["session_amount"] = session_amount
     account_dict["total_beginstack"] = total_beginstack
     account_dict["total_endstack"] = total_endstack
@@ -173,6 +173,6 @@ def getPosts():
     return all_posts
             
 def getEvents():
-    all_events = Events.query.all()
+    all_events = Events.query.order_by(func.substr(Events.date, 7, 10).desc(), func.substr(Events.date, 4, 5).desc(), func.substr(Events.date, 1, 2).desc()).all()
     print(all_events)
     return all_events

@@ -101,7 +101,7 @@ def adminAddSession(amount):
     if current_user.name != "Admin":
         return redirect(url_for('auth.login'))
     host = request.form.get('host')
-    the_date = request.form.get('date'); date = the_date.split("-")
+    the_date = request.form.get('date'); date = the_date.split("/")
     the_duration = request.form.get('duration'); duration = the_duration.split(".")
     the_small_blind = request.form.get('smallblind'); small_blind = the_small_blind.split(".")
     the_big_blind = request.form.get('bigblind'); big_blind = the_big_blind.split(".")
@@ -111,7 +111,7 @@ def adminAddSession(amount):
         flash("the host '" + host +"' does not exist", "error")
         return redirect(url_for('admin.adminSessions'))
     elif len(date) != 3 or not date[0].isdigit() or not date[1].isdigit() or not date[2].isdigit() or len(date[0]) != 2 or len(date[1]) != 2 or len(date[2]) != 4:
-        flash("Please fill in a correct date (DD-MM-YYYY)", "error")
+        flash("Please fill in a correct date (DD/MM/YYYY)", "error")
         return redirect(url_for('admin.adminSessions'))
     elif len(duration) > 2 or not duration[0].isdigit() or (len(duration) == 2 and not duration[1].isdigit()):
         flash("Please fill in a correct duration", "error")
