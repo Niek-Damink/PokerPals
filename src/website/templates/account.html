@@ -18,7 +18,7 @@
             <div class="bg-light p-4 d-flex justify-content-end text-center">
                 <ul class="list-inline mb-0">
                     <li class="list-inline-item">
-                        <h5 class="font-weight-bold mb-0 d-block">€{{account["profit"]}}</h5><small class="text-muted">Profit</small>
+                        <h5 class="font-weight-bold mb-0 d-block" id="fneg">€{{account["profit"]}}</h5><small class="text-muted">Profit</small>
                     </li>
                     <li class="list-inline-item">
                         <h5 class="font-weight-bold mb-0 d-block">5</h5><small class="text-muted">Sessions</small>
@@ -48,7 +48,7 @@
                                 </tr>
                                 <tr>
                                     <td>Average Profit</td>
-                                    <td>{{account["average_profit"]}}</td>
+                                    <td name="negative">{{account["average_profit"]}}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -70,7 +70,7 @@
                                 </tr>
                                 <tr>
                                     <td>Profit Per Hour</td>
-                                    <td>{{account["profit_hour"]}}</td>
+                                    <td name="negative">{{account["profit_hour"]}}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -82,3 +82,32 @@
     </div>
 </div>
 {% endblock %}
+
+{%block js%}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        MakeNegative()
+    });
+
+    function MakeNegative() {
+        TDs = document.getElementsByName('negative');
+        for (i=0; i<TDs.length; i++) {
+                temp = TDs[i];
+                if (temp.firstChild.nodeValue.indexOf('-') == 0){
+                    temp.className = "text-danger";
+                } 
+                else {
+                    temp.className = "text-success";
+                }
+            }
+        TD = document.getElementById('fneg')
+        if (TD.firstChild.nodeValue.indexOf('-') == 0){
+            TD.className = "font-weight-bold mb-0 d-block text-danger";
+        } 
+        else {
+            TD.className = "font-weight-bold mb-0 d-block text-success";
+        }
+    }
+
+</script>
+{%endblock%}
