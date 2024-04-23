@@ -169,7 +169,7 @@ def getMaxPostID():
     return max_session_id
 
 def getPosts():
-    all_posts = Post.query.all()
+    all_posts = Post.query.order_by(Post.id.desc()).all()
     return all_posts
             
 def getEvents():
