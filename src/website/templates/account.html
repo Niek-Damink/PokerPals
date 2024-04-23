@@ -1,3 +1,62 @@
 {% extends "base.html" %} {% block title %}Account{% endblock %} {% block content %}
-<p>Account</p>
+
+<div class="row py-5 px-4">
+    <div class="col-xl-6 mx-auto">
+
+        <!-- Profile widget -->
+        <div class="bg-white shadow rounded overflow-hidden">
+            <div class="px-4 pt-0 pb-4 bg-dark">
+                <div class="media align-items-end profile-header">
+                    <div class="profile mr-3 py-4"><img class='rounded-circle m-2'
+                            src="{{url_for('static', filename=account.imgURL)}}" width="100px" height="100px"
+                            class="avatar"></div>
+                    <div class="media-body mb-5 text-white">
+                        <h4 class="mt-0 mb-0">{{account.name}}</h4>
+                        <p class="small mb-4"> Poker pro </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-light p-4 d-flex justify-content-end text-center">
+                <ul class="list-inline mb-0">
+                    <li class="list-inline-item">
+                        <h5 class="font-weight-bold mb-0 d-block">€200</h5><small class="text-muted">Profit</small>
+                    </li>
+                    <li class="list-inline-item">
+                        <h5 class="font-weight-bold mb-0 d-block">5</h5><small class="text-muted">Sessions</small>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="py-4 px-4">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <h5 class="mb-0">User stats</h5><a href="#" class="btn btn-link text-muted">See more</a>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <table class="table table-secondary">
+                            <tbody>
+                                <tr>
+                                    <td>Total beginstack</td>
+                                    <td>500</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col">
+                        <table class="table table-secondary">
+                            <tbody>
+                                <tr>
+                                    <td>Average beginstack</td>
+                                    <td>100</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
 {% endblock %}

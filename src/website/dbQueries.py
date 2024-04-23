@@ -66,20 +66,27 @@ def getTotalStatistics(filter, value):
     total_statistics_dict = {}
     session_count = len(sessions)
     total_statistics_dict["Sessions"] = session_count
-
-    total_in = 0
-    total_added = 0
-    for session in sessions:
-        userSessions = User_Session.query.filter(User_Session.session_ID == session.session_ID)
-        for userSession in userSessions:
-            total_in += userSession.begin_stack
-            total_added += userSession.added_chips
-    total_statistics_dict["Total buyins"] = total_in
-    total_statistics_dict["Average buyin"] = round(total_in/session_count,2)
-    total_statistics_dict["Total added chips"] = total_added
-    total_statistics_dict["Average added chips"] = round(total_added/session_count,2)
-    total_statistics_dict["Total chips"] = total_added + total_in
-    total_statistics_dict["Average chips"] = round((total_added + total_in)/session_count,2)
+    if session_count != 0:
+        total_in = 0
+        total_added = 0
+        for session in sessions:
+            userSessions = User_Session.query.filter(User_Session.session_ID == session.session_ID)
+            for userSession in userSessions:
+                total_in += userSession.begin_stack
+                total_added += userSession.added_chips
+        total_statistics_dict["Total buyins"] = total_in
+        total_statistics_dict["Average buyin"] = round(total_in/session_count,2)
+        total_statistics_dict["Total added chips"] = total_added
+        total_statistics_dict["Average added chips"] = round(total_added/session_count,2)
+        total_statistics_dict["Total chips"] = total_added + total_in
+        total_statistics_dict["Average chips"] = round((total_added + total_in)/session_count,2)
+    else:
+        total_statistics_dict["Total buyins"] = 0
+        total_statistics_dict["Average buyin"] = 0
+        total_statistics_dict["Total added chips"] = 0
+        total_statistics_dict["Average added chips"] = 0
+        total_statistics_dict["Total chips"] = 0
+        total_statistics_dict["Average chips"] = 0
     return total_statistics_dict
     
 def getSessionInformation(id):
@@ -117,5 +124,10 @@ def getLeaderboard():
         i += 1
         person[0] = i
     return leaderboard
+
+def get_user(id):
+    user = User.query.filter(User.name == id).first()
+    return user
+
 
             
