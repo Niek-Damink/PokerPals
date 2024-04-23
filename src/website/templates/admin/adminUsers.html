@@ -41,6 +41,7 @@
         <div class="container w-75" >
         <ul class="list-group">
             <h5 class="mb-1 p-3">Members:</h5>
+            <div class="overflow-auto" style="max-height: 450px;">
             {% for name, url in user_list%}
             <li class="list-group-item list-group-item-action">
                 <div class="row">
@@ -61,12 +62,13 @@
                 </div>
             </li>
             {% endfor %}
+        </div>
         </ul>
     </div>
     </div>
 </div>
 
-<!-- Modal -->
+
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
