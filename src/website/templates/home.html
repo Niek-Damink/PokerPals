@@ -30,7 +30,7 @@
             <a class="list-group-item list-group-item-action flex-column align-items-start">
                 <div class="d-flex w-100 justify-content-between">
                     <h5 class="mb-1">{{post.title}}</h5>
-                    <small class="text-muted">20-03-2024</small>
+                    <small class="text-muted">{{post.date}}</small>
                 </div>
                 <div class="row">
                     <div class="col">
@@ -49,18 +49,14 @@
     <div class="col">
         <div class="list-group px-4">
             <h5 class="mb-1 p-3">Upcoming events:</h5>
+            {%for event in event_list%}
             <a class="list-group-item list-group-item-action flex-column align-items-start">
                 <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">ONK Poker event</h5>
+                    <h5 class="mb-1">{{event.name}}</h5>
                 </div>
-                <small class="text-muted">15 mei 2024</small>
+                <small class="text-muted">{{event.date}}</small>
             </a>
-            <a class="list-group-item list-group-item-action flex-column align-items-start">
-                <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">Casino night</h5>
-                </div>
-                <small class="text-muted">19 april 2024</small>
-            </a>
+            {%endfor%}
         </div>
     </div>
     {% endblock %}

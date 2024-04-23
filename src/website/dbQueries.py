@@ -1,4 +1,4 @@
-from .models import User, Session, User_Session, Post
+from .models import User, Session, User_Session, Post, Events
 from . import db
 from sqlalchemy import func
 
@@ -172,3 +172,7 @@ def getPosts():
     all_posts = Post.query.all()
     return all_posts
             
+def getEvents():
+    all_events = Events.query.all()
+    print(all_events)
+    return all_events

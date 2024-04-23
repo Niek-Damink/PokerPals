@@ -212,15 +212,16 @@ def adminAddEvent():
     event_name = request.form.get('event_name')
     date = request.form.get('date')
     the_date = date
-    date = date.split("-")
+    date = date.split("/")
     if len(event_name) == 0:
         flash("Pleas fill in a name for the event", "error")
         return redirect(url_for('admin.adminPostEvents'))
     elif len(date) != 3 or not date[0].isdigit() or not date[1].isdigit() or not date[2].isdigit() or len(date[0]) != 2 or len(date[1]) != 2 or len(date[2]) != 4:
-        flash("Please fill in a correct date (DD-MM-YYYY)", "error")
+        flash("Please fill in a correct date (DD/MM/YYYY)", "error")
         return redirect(url_for('admin.adminPostEvents'))
     new_event = Events(date = the_date, name = event_name)
     db.session.add(new_event)
+    db.session.commit()
     flash("Successfully added new Event")
     return redirect(url_for('admin.adminPostEvents'))
 
