@@ -7,7 +7,11 @@
                 <div class="media align-items-end profile-header">
                     <div class="profile mr-3 py-4"><img class='rounded-circle m-2'
                             src="{{url_for('static', filename=account['imgURL'])}}" width="100px" height="100px"
-                            class="avatar"></div>
+                            class="avatar">
+                            {%if user.name == account["name"]%}
+                            <a href="/logout" class="btn btn-dark btn-sm btn-block">Logout</a>
+                            {%endif%}
+                        </div>
                     <div class="media-body mb-5 text-white">
                         <h4 class="mt-0 mb-0">{{account["name"]}}</h4>
                         <p class="small mb-4"> Poker pro </p>
