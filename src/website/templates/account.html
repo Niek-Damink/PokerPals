@@ -123,7 +123,7 @@
                 <div class="d-flex align-items-center justify-content-between ml-3 mb-3">
                     <h5 class="mb-0">Balance overview</h5>
                 </div>
-                <div>
+                <div class="mb-4">
                     <canvas id="myChart" style="width:100%;max-width:600px"></canvas>
                 </div>
             </div>
@@ -180,14 +180,27 @@
             fill: false,
             lineTension: 0,
             backgroundColor: "rgba(0,0,255,1.0)",
-            borderColor: "rgba(0,0,255,0.1)",
+            borderColor: "rgba(0,0,0,1.0)",
+            pointBackgroundColor: "rgba(0,0,0,1.0)",
+            pointBorderColor: "rgba(0,0,0,1.0)",
             data: yArray
           }]
         },
         options: {
           legend: {display: false},
           scales: {
-            yAxes: [{ticks: {min: yMin, max:yMax}}],
+            xAxes: [{
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Session'
+                }}],
+            yAxes: [{
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Total profit/loss'
+                },
+                ticks: {min: yMin, max:yMax}}],
+            
           }
         }
       });
