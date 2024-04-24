@@ -73,6 +73,7 @@ def editUser(name):
         flash("This username is already in use", category="error")
     else:
         User.query.filter(User.name == name).update({User.name: editName}, synchronize_session=False)
+        User_Session.query.filter(User_Session.person_name == name).update({User_Session.person_name: editName}, synchronize_session=False)
         db.session.commit()
 
     file = request.files['file']
