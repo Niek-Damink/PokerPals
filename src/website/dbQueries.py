@@ -189,3 +189,14 @@ def getSessionsForPerson(name):
     for session in all_sessions:
         session.date = Session.query.filter(Session.session_ID == session.session_ID).first().date
     return all_sessions
+
+def getXYforPerson(name):
+    all_sessions = User_Session.query.filter(User_Session.person_name == name).order_by(User_Session.session_ID.asc()).all()
+    x = []
+    y = []
+    total = 0
+    for session in all_sessions:
+        x.append(session.session_ID)
+        total += round(session.end_stack - session.begin_stack - session.added_chips, 2)
+        y.append(total)
+    return x, y

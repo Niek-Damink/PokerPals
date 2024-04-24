@@ -124,7 +124,7 @@
                     <h5 class="mb-0">Balance overview</h5>
                 </div>
                 <div>
-                    <div id="myPlot" style="width:100%;max-width:700px"></div>
+                    <canvas id="myChart" style="width:100%;max-width:600px"></canvas>
                 </div>
             </div>
         </div>
@@ -164,23 +164,32 @@
 </script>
 
 <script>
-    const xArray = [10,20,30,40,50,60,70,80,90,100];
-    const yArray = [1,2,3,4,5,6,7,8,9,10,11];
+    const xArray = JSON.parse("{{x_list}}");
+    const yArray = JSON.parse("{{y_list}}");
+    const yMin = Math.floor((Math.min(-100,Math.min(...yArray))) / 50)*50;
     
-    // Define Data
-    const data = [{
-      x: xArray,
-      y: yArray,
-      mode:"lines"
-    }];
+    const yMax = Math.ceil((Math.max(100, Math.max(...yArray))) / 50)*50;
     
-    // Define Layout
-    const layout = {
-      xaxis: {range: [0, 100], title: "Session"},
-      yaxis: {range: [0, 10], title: "Balance"}
-    };
-    
-    // Display using Plotly
-    Plotly.newPlot("myPlot", data, layout);
+   
+
+    new Chart("myChart", {
+        type: "line",
+        data: {
+          labels: xArray,
+          datasets: [{
+            fill: false,
+            lineTension: 0,
+            backgroundColor: "rgba(0,0,255,1.0)",
+            borderColor: "rgba(0,0,255,0.1)",
+            data: yArray
+          }]
+        },
+        options: {
+          legend: {display: false},
+          scales: {
+            yAxes: [{ticks: {min: yMin, max:yMax}}],
+          }
+        }
+      });
     </script>
 {%endblock%}
