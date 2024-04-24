@@ -7,6 +7,7 @@ from .dbQueries import *
 from os.path import join, dirname, realpath
 import os
 import datetime
+import time
 
 admin = Blueprint('admin', __name__)
 ALLOWED_EXTENSIONS = {'png', 'jpg'}
@@ -44,14 +45,20 @@ def adminUsers():
 @login_required
 def deleteUser(name):
     if current_user.name != "Admin":
-        return redirect(url_for('auth.login'))
+        return "Fail"
     user = User.query.filter_by(name=name).first()
     path = user.imgURL
-    deleteUserName(name)
-    if path != "/pictures/account.png":
-        UPLOADS_PATH = join(dirname(realpath(__file__)), 'static/' + path)
-        os.remove(UPLOADS_PATH)
-    return redirect(url_for('admin.adminUsers'))
+    sessions = User_Session.query.filter(User_Session.person_name == user.name).count()
+    if sessions == 0:
+        deleteUserName(name)
+        if path != "/pictures/account.png":
+            UPLOADS_PATH = join(dirname(realpath(__file__)), 'static/' + path)
+            os.remove(UPLOADS_PATH)
+            return "Success"
+    else:
+        flash("You cannot delete users who have participated in sessions!", "error")
+        return "Fail"
+    
 
 @admin.route('/users/edit/<name>', methods=['POST'])
 @login_required
