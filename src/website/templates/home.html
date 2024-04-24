@@ -8,9 +8,9 @@
     <div class="col">
         <div class="position-fixed">
             <ul class="list-group px-5">
-                <h5 class="mb-1 p-3">Members:</h5>
+                <h5 class="mb-1 p-3">Players:</h5>
                 <div class="overflow-auto" style="max-height: 400px;">
-                    {% for name, url in user_list%}
+                    {% for name, url, sessions in user_list%}
                     <li class="list-group-item list-group-item-action">
                         <a class="text-reset" href="/account/{{name}}">
                             <div class="row">

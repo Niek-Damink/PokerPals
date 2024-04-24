@@ -6,9 +6,14 @@
             <div class="px-4 pt-0 pb-4 bg-dark">
                 <div class="media align-items-end profile-header">
                     <div class="profile mr-3 py-4">
-                            <div class="circular--landscape-large">
-                                <img src="{{url_for('static', filename= account['imgURL'])}}">
-                              </div>
+                        {%if account['imgURL'] != "/pictures/account.png"%}
+                        <div class="circular--landscape-large">
+                        <img src="{{url_for('static', filename= account['imgURL'])}}">
+                        </div>
+                        {%else%}
+                        <img class="rounded-circle" src="{{url_for('static', filename= account['imgURL'])}}" width="100px"
+                            height="100px">
+                        {%endif%}
                             {%if user.name == account["name"]%}
                             <a href="/logout" class="btn btn-dark btn-sm btn-block">Logout</a>
                             {%endif%}
@@ -23,10 +28,13 @@
             <div class="bg-light p-4 d-flex justify-content-end text-center">
                 <ul class="list-inline mb-0">
                     <li class="list-inline-item">
-                        <h5 class="font-weight-bold mb-0 d-block" id="fneg">€{{account["profit"]}}</h5><small class="text-muted">Profit</small>
+                        <h5 class="font-weight-bold mb-0 d-block" id="fneg">€{{account["profit"]}}</h5><small id="profit" class="text-muted">Profit</small>
                     </li>
                     <li class="list-inline-item">
                         <h5 class="font-weight-bold mb-0 d-block">{{account["session_amount"]}}</h5><small class="text-muted">Sessions</small>
+                    </li>
+                    <li class="list-inline-item">
+                        <h5 class="font-weight-bold mb-0 d-block">{{account["host_amount"]}}</h5><small class="text-muted">Hosted Sessions</small>
                     </li>
                 </ul>
             </div>
@@ -108,6 +116,7 @@
         TD = document.getElementById('fneg')
         if (TD.firstChild.nodeValue.indexOf('€-') == 0){
             TD.className = "font-weight-bold mb-0 d-block text-danger";
+            document.getElementById("profit").innerText = "Loss"
         } 
         else {
             TD.className = "font-weight-bold mb-0 d-block text-success";

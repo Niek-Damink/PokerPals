@@ -7,7 +7,9 @@ def getUserAndImage():
     user_list = []
     for user in users:
         if user.name != "Admin":
-            user_list.append([user.name, user.imgURL])
+            session_amount = User_Session.query.filter(User_Session.person_name == user.name).count()
+            user_list.append([user.name, user.imgURL, session_amount])
+            user_list.sort(key=lambda x: x[2], reverse=True)
     return user_list
     
 def deleteUserName(name):
@@ -134,12 +136,16 @@ def get_account_information(name):
     total_added_chips = 0
     total_played_hours = 0
     session_amount = user_sessions.count()
+    total_host = 0
     for user_session in user_sessions:
         profit += user_session.end_stack - user_session.begin_stack - user_session.added_chips
         total_beginstack += user_session.begin_stack
         total_endstack += user_session.end_stack
         total_added_chips += user_session.added_chips
-        total_played_hours += Session.query.filter(Session.session_ID == user_session.session_ID).first().duration
+        session = Session.query.filter(Session.session_ID == user_session.session_ID).first()
+        total_played_hours += session.duration
+        if session.host == name:
+            total_host += 1
     account_dict = {}
     account_dict["name"] = name
     account_dict["imgURL"] = user.imgURL
@@ -149,6 +155,7 @@ def get_account_information(name):
     account_dict["total_endstack"] = total_endstack
     account_dict["total_added_chips"] = total_added_chips
     account_dict["total_hours"] = total_played_hours
+    account_dict["host_amount"] = total_host
     if session_amount == 0:
         session_amount = 1
         total_played_hours = 1
