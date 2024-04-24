@@ -5,9 +5,10 @@
         <div class="bg-white shadow rounded overflow-hidden">
             <div class="px-4 pt-0 pb-4 bg-dark">
                 <div class="media align-items-end profile-header">
-                    <div class="profile mr-3 py-4"><img class='rounded-circle m-2'
-                            src="{{url_for('static', filename=account['imgURL'])}}" width="100px" height="100px"
-                            class="avatar">
+                    <div class="profile mr-3 py-4">
+                            <div class="circular--landscape-large">
+                                <img src="{{url_for('static', filename= account['imgURL'])}}">
+                              </div>
                             {%if user.name == account["name"]%}
                             <a href="/logout" class="btn btn-dark btn-sm btn-block">Logout</a>
                             {%endif%}

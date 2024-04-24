@@ -1,53 +1,56 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link
-      rel="stylesheet"
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
-      crossorigin="anonymous"
-    />
-    <link
-      rel="stylesheet"
-      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-      crossorigin="anonymous"
-    />
 
-    <title>{% block title %}Home{% endblock %}</title>
-  </head>
-  <body>
-    {% if user.is_authenticated %}
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
-        <div class="container-fluid">
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <a class="navbar-brand">
-            <img src="{{url_for('static', filename='pictures/logo.png')}}" width="200px">
-          </a>
-          <div class="collapse navbar-collapse" id="navbarText">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-              <li class="nav-item">
-                <a class="nav-link" href="/">Home</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/sessions">Sessions</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/leaderboard">Leaderboard</a>
-              </li>
-            </ul>
-            <ul class="navbar-nav ml-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link" href="/account"><img class='rounded-circle m-2' src="{{url_for('static', filename=user.imgURL)}}" width="60px" height="60px" class="avatar">{{user.name}}</a>
-                </li>
-            </ul>
-          </div>
-        </div>
-    </nav>
-    {% endif %}
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+    crossorigin="anonymous" />
+
+  <title>{% block title %}Home{% endblock %}</title>
+</head>
+
+<body>
+  {% if user.is_authenticated %}
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+    <div class="container-fluid">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <a class="navbar-brand">
+        <img src="{{url_for('static', filename='pictures/logo.png')}}" width="200px">
+      </a>
+      <div class="collapse navbar-collapse" id="navbarText">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" href="/">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/sessions">Sessions</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/leaderboard">Leaderboard</a>
+          </li>
+        </ul>
+        <ul class="navbar-nav ml-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link text-center" href="/account">
+              <div class="circular--landscape-big">
+                <img src="{{url_for('static', filename= user.imgURL)}}">
+              </div>
+              <p>{{user.name}}</p>
+              </a>
+      </div>
+    </div>
+    </a>
+    </li>
+    </ul>
+    </div>
+    </div>
+  </nav>
+  {% endif %}
 
     {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
@@ -98,3 +101,14 @@
 
   </body>
 </html>
+
+<style>
+  .circular--landscape { display: inline-block; position: relative; width: 50px; height: 50px; overflow: hidden; border-radius: 50%; } 
+  .circular--landscape img { width: auto; height: 200%; margin-left: -5px;}
+
+  .circular--landscape-big { display: inline-block; position: relative; width: 60px; height: 60px; overflow: hidden; border-radius: 50%; } 
+  .circular--landscape-big img { width: auto; height: 200%; margin-left: -5px;}
+
+  .circular--landscape-large { display: inline-block; position: relative; width: 100px; height: 100px; overflow: hidden; border-radius: 50%; } 
+  .circular--landscape-large img { width: auto; height: 200%; margin-left: -5px;}
+</style>
