@@ -13,12 +13,12 @@ def home():
 @views.route('/account')
 @login_required
 def account():
-    return render_template("account.html", user = current_user, account = get_account_information(current_user.name))
+    return render_template("account.html", user = current_user, account = get_account_information(current_user.name),  session_list = getSessionsForPerson(current_user.name))
 
 @views.route('/account/<name>')
 @login_required
 def accountID(name):
-    return render_template("account.html", user = current_user, account = get_account_information(name))
+    return render_template("account.html", user = current_user, account = get_account_information(name), session_list = getSessionsForPerson(name))
 
 @views.route('/sessions', methods=['GET', 'POST'])
 @login_required

@@ -183,3 +183,9 @@ def getEvents():
     all_events = Events.query.order_by(func.substr(Events.date, 7, 10).desc(), func.substr(Events.date, 4, 5).desc(), func.substr(Events.date, 1, 2).desc()).all()
     print(all_events)
     return all_events
+
+def getSessionsForPerson(name):
+    all_sessions = User_Session.query.filter(User_Session.person_name == name).order_by(User_Session.session_ID.asc()).all()
+    for session in all_sessions:
+        session.date = Session.query.filter(Session.session_ID == session.session_ID).first().date
+    return all_sessions
