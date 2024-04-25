@@ -42,9 +42,16 @@ def sessionOverview(id):
     return render_template("sessionOverview.html", user = current_user, session_information = session_information, enters = enters)
 
 
-@views.route('/leaderboard')
+@views.route('/leaderboard', methods=['GET', 'POST'])
 @login_required
 def leaderboard():
-    return render_template("leaderboard.html", user = current_user, leaderboard = getLeaderboard())
+    year = request.form.get("year")
+    if request.method == "POST" and year != "all":
+        leaderboard = getLeaderboardPerYear(year)
+        year = "Poker Pal's " + year + " Leaderboard!" 
+    else:
+        leaderboard = getLeaderboard()
+        year = "Poker Pal's All-Time Leaderboard!"
+    return render_template("leaderboard.html", user = current_user, leaderboard = leaderboard, dates = getAllDates(), year=year)
 
 
