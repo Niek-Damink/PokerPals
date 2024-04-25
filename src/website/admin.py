@@ -101,6 +101,39 @@ def adminSessions():
         orderOn = "0"
     return render_template("admin/adminSessionOverview.html", user = current_user, session_list = getSessionsWithPeopleAndPot(filterOn, filterValue, orderOn))
 
+@admin.route('/sessions/editSession/<id>', methods=['POST'])
+@login_required
+def adminEditSession(id):
+    if current_user.name != "Admin":
+        return redirect(url_for('auth.login'))
+    host = request.form.get('host')
+    the_date = request.form.get('date'); date = the_date.split("/")
+    the_duration = request.form.get('duration'); duration = the_duration.split(".")
+    the_small_blind = request.form.get('smallblind'); small_blind = the_small_blind.split(".")
+    the_big_blind = request.form.get('bigblind'); big_blind = the_big_blind.split(".")
+    is_straddle = request.form.get('straddle') != None
+    is_seven_deuce = request.form.get('sevendeuce') != None
+    if not User.query.filter_by(name=host).first():
+        flash("the host '" + host +"' does not exist", "error")
+        return redirect(url_for('admin.adminSessions'))
+    elif len(date) != 3 or not date[0].isdigit() or not date[1].isdigit() or not date[2].isdigit() or len(date[0]) != 2 or len(date[1]) != 2 or len(date[2]) != 4:
+        flash("Please fill in a correct date (DD/MM/YYYY)", "error")
+        return redirect(url_for('admin.adminSessions'))
+    elif len(duration) > 2 or not duration[0].isdigit() or (len(duration) == 2 and not duration[1].isdigit()):
+        flash("Please fill in a correct duration", "error")
+        return redirect(url_for('admin.adminSessions'))
+    elif len(small_blind) > 2 or not small_blind[0].isdigit() or (len(small_blind) == 2 and not small_blind[1].isdigit()):
+        flash("Please fill in a correct small blind", "error")
+        return redirect(url_for('admin.adminSessions'))
+    elif len(big_blind) > 2 or not big_blind[0].isdigit() or (len(big_blind) == 2 and not big_blind[1].isdigit()):
+        flash("Please fill in a correct big blind", "error")
+        return redirect(url_for('admin.adminSessions'))
+    Session.query.filter(Session.session_ID == id).update({Session.host:host, Session.session_ID:id, Session.date:the_date, Session.duration:the_duration, Session.small_blind: the_small_blind, Session.big_blind: the_big_blind, Session.straddle: is_straddle, Session.seven_deuce: is_seven_deuce}, synchronize_session=False)
+    db.session.commit()
+    flash("Succesfully edited session " + id, "success")
+    return redirect(url_for('admin.adminSessions'))
+    
+
 @admin.route('/sessions/delete/<id>', methods=['DELETE'])
 @login_required
 def adminDeleteSession(id):
