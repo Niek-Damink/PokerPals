@@ -17,6 +17,13 @@ def deleteUserName(name):
     db.session.commit()
     return
 
+def deleteSession(id):
+    User_Session.query.filter(User_Session.session_ID == id).delete(synchronize_session=False)
+    Session.query.filter(Session.session_ID == id).delete(synchronize_session=False)
+    db.session.commit()
+    return
+    
+
 def getMaxSessionID():
     max_session = Session.query.order_by(Session.session_ID.desc()).first()
     if max_session == None:

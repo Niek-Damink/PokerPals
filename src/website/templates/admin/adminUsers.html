@@ -108,7 +108,7 @@
 {% block js%}
 <script>
     function deleteAccount(name) {
-        fetch("http://127.0.0.1:5000/admin/users/delete/" + name, {
+        fetch("/admin/users/delete/" + name, {
             method: 'DELETE'
         }).then(function() {
             location.reload();

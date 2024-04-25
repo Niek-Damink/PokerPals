@@ -1,0 +1,123 @@
+{% extends "admin/baseAdmin.html" %} {% block title %}Sessions{% endblock %} {% block content %}
+<div class="fluid-container p-5">
+    <h3 align="center">Sessions</h3><br>
+    <form method="POST">
+        <div class="form-row align-items-center">
+            <div class="col m-3">
+                <label class="mr-sm-2" for="filter">Filter on</label>
+                <select onchange="saveChoice(this, 'active1');" class="custom-select mr-sm-2" name="filter" id="filter">
+                    <option id="f0" selected value="0">All</option>
+                    <option id="f1" value="1">Host</option>
+                    <option id="f2" value="2">Month</option>
+                    <option id="f3" value="3">Year</option>
+                </select>
+            </div>
+            <div class="col-auto m-3">
+                <label class="mr-sm-2" for="input Value">Value</label>
+                <input type="text" onkeyup="saveValue(this)" class="form-control" name="inputValue" id="inputValue" placeholder="Value">
+                </div>
+
+            <div class="col m-3">
+                <label class="mr-sm-2" for="order">Order on</label>
+                <select onchange="saveChoice(this, 'active2');" class="custom-select mr-sm-2" name="order" id="order">
+                    <option selected value="0">Date</option>
+                    <option value="1">Play Time</option>
+                    <option value="2">Potsize</option>
+                    <option value="3">Players</option>
+                </select>
+            </div>
+        <div class="col-auto m-3 mt-5">
+            <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+        <div class="col-auto m-3 mt-5">
+            <button type="button" onclick="addSession()" class="btn btn-info">Add a new session</button>
+        </div>
+    </div>
+    </form>
+    <div class="row">
+        <div class="col overflow-auto" style="max-height: 400px;">
+            <table class="table">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Session</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Host</th>
+                        <th scope="col">Play Time</th>
+                        <th scope="col">SB</th>
+                        <th scope="col">BB</th>
+                        <th scope="col">72</th>
+                        <th scope="col">Straddle</th>
+                        <th scope="col">Players</th>
+                        <th scope="col">Total Pot</th>
+                        <th scope="col">Edit</th>
+                        <th scope="col">Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for session in session_list%}
+                    <tr>
+                        <th scope="row">{{session.session_ID}}</th>
+                        <td>{{session.date}}</td>
+                        <td>{{session.host}}</td>
+                        <td>{{session.duration}}</td>
+                        <td>{{session.small_blind}}</td>
+                        <td>{{session.big_blind}}</td>
+                        {%if session.seven_deuce%}
+                        <td>On</td>
+                        {%else%}
+                        <td>Off</td>
+                        {%endif%}
+                        {%if session.straddle%}
+                        <td>On</td>
+                        {%else%}
+                        <td>Off</td>
+                        {%endif%}
+                        <td>{{session.players}}</td>
+                        <td>{{session.pot}}</td>
+                        <td><button onclick="editSession('{{session.session_ID}}')" class="btn btn-primary">Edit</button></td>
+                        <td><button onclick="deleteSession('{{session.session_ID}}')" class="btn btn-danger">Delete</button></td>
+                    </tr>
+                    {%endfor%}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{%block js%}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        loadDocument()
+    });
+
+    function addSession(){
+        location.href = "/admin/sessions/add_session"
+    }
+
+    function loadDocument(){
+        active1 = window.sessionStorage.getItem("active1")
+        active2 = window.sessionStorage.getItem("active2")
+        value = window.sessionStorage.getItem("inputValue")
+        document.getElementById("filter").selectedIndex = active1
+        document.getElementById("order").selectedIndex = active2
+        document.getElementById("inputValue").value = value
+    }
+
+    function saveChoice(element, form){
+        window.sessionStorage.setItem(form, element.selectedIndex)
+    }
+
+    function saveValue(element){
+        window.sessionStorage.setItem(element.id, element.value)
+    }
+
+    function deleteSession(id) {
+        fetch("/admin/sessions/delete/" + id, {
+            method: 'DELETE'
+        }).then(function() {
+            location.reload();
+        });
+    }
+</script>
+{%endblock%}

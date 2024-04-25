@@ -15,7 +15,7 @@
                             height="100px">
                         {%endif%}
                             {%if user.name == account["name"]%}
-                            <a href="/logout" class="btn btn-dark btn-sm btn-block">Logout</a>
+                            <a onclick="deleteStorage()" href="/logout" class="btn btn-dark btn-sm btn-block">Logout</a>
                             {%endif%}
                         </div>
                     <div class="media-body mb-5 text-white">
@@ -204,5 +204,9 @@
           }
         }
       });
+
+      function deleteStorage(){
+        window.sessionStorage.clear()
+      }
     </script>
 {%endblock%}

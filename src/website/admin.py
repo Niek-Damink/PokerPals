@@ -88,11 +88,32 @@ def editUser(name):
         flash("File is not allowed, allowed formats are png and jpg", "error")
     return redirect(url_for('admin.adminUsers'))
 
-
-
 @admin.route('/sessions', methods=['GET', 'POST'])
 @login_required
 def adminSessions():
+    if request.method == "POST":
+        filterOn = request.form.get("filter")
+        filterValue = request.form.get("inputValue")
+        orderOn = request.form.get("order")
+    else:
+        filterOn = "0"
+        filterValue = None
+        orderOn = "0"
+    return render_template("admin/adminSessionOverview.html", user = current_user, session_list = getSessionsWithPeopleAndPot(filterOn, filterValue, orderOn))
+
+@admin.route('/sessions/delete/<id>', methods=['DELETE'])
+@login_required
+def adminDeleteSession(id):
+    if current_user.name != "Admin":
+        return "Fail"
+    flash("Successfully deleted session", "success")
+    deleteSession(id)
+    return redirect(url_for("admin.adminSessions"))
+
+
+@admin.route('/sessions/add_session', methods=['GET', 'POST'])
+@login_required
+def adminAddSessions():
     if current_user.name != "Admin":
         return redirect(url_for('auth.login'))
     global do_reset
@@ -117,19 +138,19 @@ def adminAddSession(amount):
     is_seven_deuce = request.form.get('sevendeuce') != None
     if not User.query.filter_by(name=host).first():
         flash("the host '" + host +"' does not exist", "error")
-        return redirect(url_for('admin.adminSessions'))
+        return redirect(url_for('admin.adminAddSessions'))
     elif len(date) != 3 or not date[0].isdigit() or not date[1].isdigit() or not date[2].isdigit() or len(date[0]) != 2 or len(date[1]) != 2 or len(date[2]) != 4:
         flash("Please fill in a correct date (DD/MM/YYYY)", "error")
-        return redirect(url_for('admin.adminSessions'))
+        return redirect(url_for('admin.adminAddSessions'))
     elif len(duration) > 2 or not duration[0].isdigit() or (len(duration) == 2 and not duration[1].isdigit()):
         flash("Please fill in a correct duration", "error")
-        return redirect(url_for('admin.adminSessions'))
+        return redirect(url_for('admin.adminAddSessions'))
     elif len(small_blind) > 2 or not small_blind[0].isdigit() or (len(small_blind) == 2 and not small_blind[1].isdigit()):
         flash("Please fill in a correct small blind", "error")
-        return redirect(url_for('admin.adminSessions'))
+        return redirect(url_for('admin.adminAddSessions'))
     elif len(big_blind) > 2 or not big_blind[0].isdigit() or (len(big_blind) == 2 and not big_blind[1].isdigit()):
         flash("Please fill in a correct big blind", "error")
-        return redirect(url_for('admin.adminSessions'))
+        return redirect(url_for('admin.adminAddSessions'))
     person_session = []
     used_names = []
     total_in = 0
@@ -156,10 +177,10 @@ def adminAddSession(amount):
             total_in += float(begin_stack) + float(added_stack)
             total_out += float(end_stack)
             continue
-        return redirect(url_for('admin.adminSessions'))
+        return redirect(url_for('admin.adminAddSessions'))
     if (total_in != total_out):
         flash("The total amount of money going in and out is not equal", "error")
-        return redirect(url_for('admin.adminSessions'))
+        return redirect(url_for('admin.adminAddSessions'))
     global do_reset; do_reset = True
     session_ID = getMaxSessionID()
     new_session = Session(host=host, session_ID = session_ID, date=the_date, duration = the_duration, small_blind = the_small_blind, big_blind = the_big_blind, straddle = is_straddle, seven_deuce = is_seven_deuce)
@@ -169,7 +190,7 @@ def adminAddSession(amount):
         db.session.add(new_person_session)
     db.session.commit()
     flash("Succesfully added the new session", "success")
-    return redirect(url_for('admin.adminSessions'))
+    return redirect(url_for('admin.adminAddSessions'))
     
 
 @admin.route('/post-events', methods=['GET'])
