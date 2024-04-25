@@ -56,25 +56,25 @@
                 <tbody>
                     {% for session in session_list%}
                     <tr>
-                        <th scope="row">{{session.session_ID}}</th>
-                        <td>{{session.date}}</td>
-                        <td>{{session.host}}</td>
-                        <td>{{session.duration}}</td>
-                        <td>{{session.small_blind}}</td>
-                        <td>{{session.big_blind}}</td>
+                        <th scope="row" name="{{session.session_ID}}">{{session.session_ID}}</th>
+                        <td name="{{session.session_ID}}">{{session.date}}</td>
+                        <td name="{{session.session_ID}}">{{session.host}}</td>
+                        <td name="{{session.session_ID}}">{{session.duration}}</td>
+                        <td name="{{session.session_ID}}">{{session.small_blind}}</td>
+                        <td name="{{session.session_ID}}">{{session.big_blind}}</td>
                         {%if session.seven_deuce%}
-                        <td>On</td>
+                        <td name="{{session.session_ID}}">On</td>
                         {%else%}
-                        <td>Off</td>
+                        <td name="{{session.session_ID}}">Off</td>
                         {%endif%}
                         {%if session.straddle%}
-                        <td>On</td>
+                        <td name="{{session.session_ID}}">On</td>
                         {%else%}
-                        <td>Off</td>
+                        <td name="{{session.session_ID}}">Off</td>
                         {%endif%}
-                        <td>{{session.players}}</td>
-                        <td>{{session.pot}}</td>
-                        <td><button onclick="editSession('{{session.session_ID}}')" class="btn btn-primary">Edit</button></td>
+                        <td name="{{session.session_ID}}">{{session.players}}</td>
+                        <td name="{{session.session_ID}}">{{session.pot}}</td>
+                        <td><button onclick="editSession('{{session.session_ID}}')" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Edit</button></td>
                         <td><button onclick="deleteSession('{{session.session_ID}}')" class="btn btn-danger">Delete</button></td>
                     </tr>
                     {%endfor%}
@@ -83,6 +83,71 @@
         </div>
     </div>
 </div>
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalLabel">title</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <form id="form" method="POST" action="/admin/sessions/editSession">
+                <h5 class="mb-1 py-3">Session</h5>
+                <div class="form-row">
+                  <div class="form-group col-md-6">
+                    <label>Host</label>
+                    <input type="text" class="form-control" name="host" id="host" placeholder="Host">
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label>Date</label>
+                    <input type="text" class="form-control" name="date" id="date"
+                      placeholder="DD/MM/YYYY">
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group col">
+                    <label>Duration</label>
+                    <input type="text" class="form-control" name="duration" id="duration"
+                      placeholder="duration">
+                  </div>
+                  <div class="form-group col">
+                    <label>Small blind</label>
+                    <input type="text" class="form-control" name="smallblind" id="smallblind"
+                      placeholder="Small blind">
+                  </div>
+                  <div class="form-group col">
+                    <label>Big blind</label>
+                    <input type="text" class="form-control" name="bigblind" id="bigblind"
+                      placeholder="Big blind">
+                  </div>
+                </div>
+                <div class="form-row p-2 px-4">
+                  <div class="form-check col">
+                    <input class="form-check-input" type="checkbox" name="straddle" id="straddle">
+                    <label class="form-check-label" for="gridCheck">
+                      straddle
+                    </label>
+                  </div>
+                  <div class="form-check col">
+                    <input class="form-check-input" type="checkbox" name="sevendeuce" id="SevenDeuce">
+                    <label class="form-check-label" for="gridCheck">
+                      72
+                    </label>
+                  </div>
+                </div>
+                </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" onclick="submitEditForm()" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
 {% endblock %}
 
 {%block js%}
@@ -118,6 +183,22 @@
         }).then(function() {
             location.reload();
         });
+    }
+
+    function editSession(id) {
+        var nodes = document.getElementsByName(id)
+        document.getElementById("modalLabel").innerText = "Edit session " + nodes[0].innerText
+        document.getElementById("host").value = nodes[1].innerText
+        document.getElementById("date").value = nodes[2].innerText
+        document.getElementById("duration").value = nodes[3].innerText
+        document.getElementById("smallblind").value = nodes[4].innerText
+        document.getElementById("bigblind").value = nodes[5].innerText
+        document.getElementById("SevenDeuce").checked = nodes[6].innerText == "On"
+        document.getElementById("straddle").checked = nodes[7].innerText == "On"
+    }
+
+    function submitEditForm(){
+        document.getElementById('editForm').submit()
     }
 </script>
 {%endblock%}
