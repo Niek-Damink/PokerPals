@@ -75,7 +75,7 @@
                         <td name="{{session.session_ID}}">{{session.players}}</td>
                         <td name="{{session.session_ID}}">{{session.pot}}</td>
                         <td><button onclick="editSession('{{session.session_ID}}')" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Edit</button></td>
-                        <td><button onclick="deleteSession('{{session.session_ID}}')" class="btn btn-danger">Delete</button></td>
+                        <td><button onclick="startDelete('{{session.session_ID}}')" class="btn btn-danger" data-toggle="modal" data-target="#areYouSureModal">Delete</button></td>
                     </tr>
                     {%endfor%}
                 </tbody>
@@ -148,6 +148,24 @@
       </div>
     </div>
   </div>
+  <div class="modal fade" id="areYouSureModal" tabindex="-1" role="dialog" aria-labelledby="areYouSutrModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="areYouSureModalLabel">Are you sure you want to delete</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div class="container text-center">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+          <button type="button" id="deleteYes" onclick="" class="btn btn-primary">Yes</button>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
 {% endblock %}
 
 {%block js%}
@@ -200,6 +218,13 @@
 
     function submitEditForm(){
         document.getElementById('editForm').submit()
+    }
+
+    function startDelete(id) {
+        document.getElementById("deleteYes").onclick = function() {
+            deleteSession(id);
+        };
+        document.getElementById("areYouSureModalLabel").innerText = "Are you sure you want to delete session "+ id
     }
 </script>
 {%endblock%}

@@ -57,7 +57,7 @@
                         {{ name }}
                     </div>
                     <div class="col-auto">
-                        <button type="button" onclick='deleteAccount("{{name}}")' class="btn btn-danger">&times;</button>
+                        <button type="button" class="btn btn-danger" onclick="startDelete('{{name}}')" data-toggle="modal" data-target="#areYouSureModal">&times;</button>
                     </div>
                     <div class="col-auto">
                         <button type="button" class="btn btn-primary" onclick="editAccount('{{name}}')" data-toggle="modal" data-target="#exampleModal">
@@ -103,6 +103,25 @@
       </div>
     </div>
   </div>
+
+  <div class="modal fade" id="areYouSureModal" tabindex="-1" role="dialog" aria-labelledby="areYouSutrModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="areYouSureModalLabel">Are you sure you want to delete</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div class="container text-center">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+          <button type="button" id="deleteYes" onclick="" class="btn btn-primary">Yes</button>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
 {% endblock %}
 
 {% block js%}
@@ -113,6 +132,13 @@
         }).then(function() {
             location.reload();
         });
+    }
+
+    function startDelete(name) {
+        document.getElementById("deleteYes").onclick = function() {
+            deleteAccount(name);
+        };
+        document.getElementById("areYouSureModalLabel").innerText = "Are you sure you want to delete "+ name +"'s account"
     }
 
     function editAccount(name){
