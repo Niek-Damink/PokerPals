@@ -34,15 +34,15 @@ def getMaxSessionID():
 
 def getSessionsWithPeopleAndPot(filter, value, order):
     if filter == "1" and value != "":
-        sessions = Session.query.filter(Session.host == value).all()
+        sessions = Session.query.filter(Session.host == value).order_by(func.substr(Session.date, 7, 10).desc(), func.substr(Session.date, 4, 5).desc(), func.substr(Session.date, 1, 2).desc()).all()
     elif filter == "2" and value != "":
         theFilter = "___" + value + "_____"
-        sessions = Session.query.filter(Session.date.like(theFilter)).all()
+        sessions = Session.query.filter(Session.date.like(theFilter)).order_by(func.substr(Session.date, 7, 10).desc(), func.substr(Session.date, 4, 5).desc(), func.substr(Session.date, 1, 2).desc()).all()
     elif filter == "3" and value != "":
         theFilter = "______" + value
-        sessions = Session.query.filter(Session.date.like(theFilter)).all()
+        sessions = Session.query.filter(Session.date.like(theFilter)).order_by(func.substr(Session.date, 7, 10).desc(), func.substr(Session.date, 4, 5).desc(), func.substr(Session.date, 1, 2).desc()).all()
     else:
-        sessions = Session.query.all()
+        sessions = Session.query.order_by(func.substr(Session.date, 7, 10).desc(), func.substr(Session.date, 4, 5).desc(), func.substr(Session.date, 1, 2).desc()).all()
     for session in sessions:
         total = 0
         userSessions = User_Session.query.filter(User_Session.session_ID == session.session_ID)
@@ -51,8 +51,10 @@ def getSessionsWithPeopleAndPot(filter, value, order):
             total += userSession.end_stack
         session.players = players
         session.pot = total
+    for i, session in enumerate(sessions):
+        session.number = len(sessions) - i
     if order == "0":
-        sessions.sort(key=lambda x: x.session_ID, reverse=True)
+        pass
     elif order == "1":
         sessions.sort(key=lambda x: x.duration, reverse=True)
     elif order == "2":
@@ -222,9 +224,15 @@ def getEvents():
     return all_events
 
 def getSessionsForPerson(name):
-    all_sessions = User_Session.query.filter(User_Session.person_name == name).order_by(User_Session.session_ID.asc()).all()
+    all_sessions = User_Session.query.filter(User_Session.person_name == name).order_by(User_Session.session_ID.desc()).all()
+    all_all_sessions = Session.query.order_by(func.substr(Session.date, 7, 10).desc(), func.substr(Session.date, 4, 5).desc(), func.substr(Session.date, 1, 2).desc()).all()
+    sessionDict = {}  #WORNFNFNFNFNFNDSS
+    for i, session in enumerate(all_all_sessions):
+        sessionDict[session.session_ID] = len(all_all_sessions) - i
     for session in all_sessions:
         session.date = Session.query.filter(Session.session_ID == session.session_ID).first().date
+        session.number = sessionDict[session.session_ID]
+
     return all_sessions
 
 def getXYforPerson(name):

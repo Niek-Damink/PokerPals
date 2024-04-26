@@ -56,7 +56,7 @@
                 <tbody>
                     {% for session in session_list%}
                     <tr>
-                        <th scope="row" name="{{session.session_ID}}">{{session.session_ID}}</th>
+                        <th scope="row" name="{{session.session_ID}}">{{session.number}}</th>
                         <td name="{{session.session_ID}}">{{session.date}}</td>
                         <td name="{{session.session_ID}}">{{session.host}}</td>
                         <td name="{{session.session_ID}}">{{session.duration}}</td>
@@ -75,7 +75,7 @@
                         <td name="{{session.session_ID}}">{{session.players}}</td>
                         <td name="{{session.session_ID}}">{{session.pot}}</td>
                         <td><button onclick="editSession('{{session.session_ID}}')" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Edit</button></td>
-                        <td><button onclick="startDelete('{{session.session_ID}}')" class="btn btn-danger" data-toggle="modal" data-target="#areYouSureModal">Delete</button></td>
+                        <td><button onclick="startDelete('{{session.session_ID}}', '{{session.number}}')" class="btn btn-danger" data-toggle="modal" data-target="#areYouSureModal">Delete</button></td>
                     </tr>
                     {%endfor%}
                 </tbody>
@@ -220,11 +220,11 @@
         document.getElementById('editForm').submit()
     }
 
-    function startDelete(id) {
+    function startDelete(id, number) {
         document.getElementById("deleteYes").onclick = function() {
             deleteSession(id);
         };
-        document.getElementById("areYouSureModalLabel").innerText = "Are you sure you want to delete session "+ id
+        document.getElementById("areYouSureModalLabel").innerText = "Are you sure you want to delete session "+ number
     }
 </script>
 {%endblock%}
