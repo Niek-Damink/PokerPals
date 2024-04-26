@@ -8,7 +8,9 @@
                     <div class="profile mr-3 py-4">
                         {%if account['imgURL'] != "/pictures/account.png"%}
                         <div class="circular--landscape-large">
+                            <div class="image-container">
                         <img src="{{url_for('static', filename= account['imgURL'])}}">
+                        </div>
                         </div>
                         {%else%}
                         <img class="rounded-circle" src="{{url_for('static', filename= account['imgURL'])}}" width="100px"

@@ -47,7 +47,9 @@
                 <div class="row">
                     {%if url != "/pictures/account.png"%}
                                     <div class="circular--landscape">
+                                        <div class="image-container">
                                     <img src="{{url_for('static', filename= url)}}">
+                                    </div>
                                     </div>
                                     {%else%}
                                     <img class="rounded-circle" src="{{url_for('static', filename= url)}}" width="50px"
