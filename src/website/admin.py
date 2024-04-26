@@ -242,6 +242,15 @@ def adminPostEventsDeletePost(id):
     deletePost(id)
     return redirect(url_for("admin.adminAddPostEvents"))
 
+@admin.route('/post-events/delete-event/<id>', methods=['DELETE'])
+@login_required
+def adminPostEventsDeleteEvent(id):
+    if current_user.name != "Admin":
+        return redirect(url_for('auth.login'))
+    flash("Successfully deleted event", "success")
+    deleteEvent(id)
+    return redirect(url_for("admin.adminAddPostEvents"))
+
 
 @admin.route('/post-events/add', methods=['GET'])
 @login_required

@@ -185,6 +185,21 @@
         document.getElementById("areYouSureModalLabel").innerText = "Are you sure you want to delete post '"+ title +"'"
     }
 
+    function startDeleteEvent(id, name) {
+        document.getElementById("deleteYes").onclick = function() {
+            deleteEvent(id);
+        };
+        document.getElementById("areYouSureModalLabel").innerText = "Are you sure you want to delete event '"+ name +"'"
+    }
+
+    function deleteEvent(id){
+        fetch("/admin/post-events/delete-event/" + id, {
+            method: 'DELETE'
+        }).then(function() {
+            location.reload();
+        });
+    }
+
     function deletePost(id){
         fetch("/admin/post-events/delete-post/" + id, {
             method: 'DELETE'
