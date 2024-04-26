@@ -55,9 +55,9 @@
                         <th scope="row">{{session.number}}</th>
                         <td>{{session.date}}</td>
                         <td>{{session.host}}</td>
-                        <td>{{session.duration}}</td>
-                        <td>{{session.small_blind}}</td>
-                        <td>{{session.big_blind}}</td>
+                        <td>{{session.duration | round(2)}}</td>
+                        <td>{{session.small_blind | round(2)}}</td>
+                        <td>{{session.big_blind | round(2)}}</td>
                         {%if session.seven_deuce%}
                         <td>On</td>
                         {%else%}
@@ -68,8 +68,8 @@
                         {%else%}
                         <td>Off</td>
                         {%endif%}
-                        <td>{{session.players}}</td>
-                        <td>{{session.pot}}</td>
+                        <td>{{session.players | round(2)}}</td>
+                        <td>{{session.pot | round(2)}}</td>
                         <td><a href="/sessions/{{session.session_ID}}">Results</a></td>
                     </tr>
                     {%endfor%}
@@ -87,7 +87,7 @@
                     {%for feature, amount in total_statistics.items()%}
                     <tr>
                         <td>{{feature}}</td>
-                        <td>{{amount}}</td>
+                        <td>{{amount | round(2)}}</td>
                     </tr>
                     {%endfor%}
                 </thead>

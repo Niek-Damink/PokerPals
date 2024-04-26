@@ -109,11 +109,11 @@
                             {%for session in session_list%}
                             <tr>
                                 <th scope="row">{{session.number}}</th>
-                                <td>{{session.date}}</td>
-                                <td>{{session.begin_stack}}</td>
-                                <td>{{session.added_chips}}</td>
-                                <td>{{session.end_stack}}</td>
-                                <td>{{(session.end_stack - session.added_chips - session.begin_stack) | round(2)}}</td>
+                                <td>{{session.date | round(2)}}</td>
+                                <td>{{session.begin_stack | round(2)}}</td>
+                                <td>{{session.added_chips | round(2)}}</td>
+                                <td>{{session.end_stack | round(2)}}</td>
+                                <td name="negative">{{(session.end_stack - session.added_chips - session.begin_stack) | round(2)}}</td>
                                 <td><a href="/sessions/{{session.session_ID}}">Session</a></td>
                             </tr>
                             {%endfor%}
