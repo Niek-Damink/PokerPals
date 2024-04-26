@@ -231,7 +231,7 @@ def adminAddSession(amount):
 def adminPostEvents():
     if current_user.name != "Admin":
         return redirect(url_for('auth.login'))
-    return render_template("admin/adminPostEventsOverview.html", user = current_user, post_list = getPosts())
+    return render_template("admin/adminPostEventsOverview.html", user = current_user, post_list = getPosts(), event_list = getEventsAdmin())
 
 @admin.route('/post-events/delete-post/<id>', methods=['DELETE'])
 @login_required
@@ -240,7 +240,7 @@ def adminPostEventsDeletePost(id):
         return redirect(url_for('auth.login'))
     flash("Successfully deleted post", "success")
     deletePost(id)
-    return render_template("admin/adminPostEventsOverview.html", user = current_user, post_list = getPosts())
+    return redirect(url_for("admin.adminAddPostEvents"))
 
 
 @admin.route('/post-events/add', methods=['GET'])
@@ -285,6 +285,23 @@ def adminAddPost():
         flash("Succesfully created post")  
     return redirect(url_for("admin.adminPostEvents"))
 
+@admin.route('/post-events/edit-event/<id>', methods=['POST'])
+@login_required
+def adminEditEvent(id):
+    if current_user.name != "Admin":
+        return redirect(url_for('auth.login'))
+    name = request.form.get("event_name")
+    date = request.form.get("date").split("/"); the_date = request.form.get("date")
+    if len(name) == 0:
+        flash("Please enter a name", "error")
+        return redirect(url_for("admin.adminPostEvents"))
+    elif len(date) != 3 or not date[0].isdigit() or not date[1].isdigit() or not date[2].isdigit() or len(date[0]) != 2 or len(date[1]) != 2 or len(date[2]) != 4:
+        flash("Please fill in a correct date (DD/MM/YYYY)", "error")
+        return redirect(url_for("admin.adminPostEvents"))
+    Events.query.filter(Events.id == id).update({Events.name: name, Events.date:the_date})
+    db.session.commit()
+    return redirect(url_for("admin.adminPostEvents"))
+
 @admin.route('/post-events/edit-post/<id>', methods=['POST'])
 @login_required
 def adminEditPost(id):
@@ -299,7 +316,7 @@ def adminEditPost(id):
         flash("Please enter a title", "error")
         return redirect(url_for("admin.adminPostEvents"))
     elif len(text) == 0:
-        flash("Pleas enter some text", "error")
+        flash("Please enter some text", "error")
         return redirect(url_for("admin.adminPostEvents"))
     elif len(date) != 3 or not date[0].isdigit() or not date[1].isdigit() or not date[2].isdigit() or len(date[0]) != 2 or len(date[1]) != 2 or len(date[2]) != 4:
         flash("Please fill in a correct date (DD/MM/YYYY)", "error")

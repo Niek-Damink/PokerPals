@@ -227,7 +227,11 @@ def getMaxPostID():
 def getPosts():
     all_posts = Post.query.order_by(Post.id.desc()).all()
     return all_posts
-            
+
+def getEventsAdmin():
+    all_events = Events.query.all()
+    return all_events
+   
 def getEvents():
     year = datetime.datetime.today().strftime('%Y')
     month = datetime.datetime.today().strftime('%m')

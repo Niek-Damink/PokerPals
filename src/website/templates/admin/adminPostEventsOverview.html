@@ -19,20 +19,48 @@
                     <tr>
                         <th>{{post.date}}</th>
                         <th>{{post.title}}</th>
-                        <td><button onclick="editPost('{{post.id}}', '{{post.title}}', '{{post.date}}', '{{post.text | urlencode}}')" class="btn btn-primary" data-toggle="modal" data-target="#postModal">Edit</button></td>
-                        <td><button onclick="startDeletePost('{{post.id}}', '{{post.title}}')" class="btn btn-danger" data-toggle="modal" data-target="#areYouSureModal">Delete</button></td>
+                        <td><button
+                                onclick="editPost('{{post.id}}', '{{post.title}}', '{{post.date}}', '{{post.text | urlencode}}')"
+                                class="btn btn-primary" data-toggle="modal" data-target="#postModal">Edit</button></td>
+                        <td><button onclick="startDeletePost('{{post.id}}', '{{post.title}}')" class="btn btn-danger"
+                                data-toggle="modal" data-target="#areYouSureModal">Delete</button></td>
                     </tr>
                     {%endfor%}
                 </tbody>
             </table>
         </div>
-        <div class="m-3">
-        <button onclick="add()" class="btn btn-info">Add a new Post</button>
     </div>
+    <div class="col m-5">
+        <h3 align="center" class="mb-5">Events</h3>
+        <div class="col overflow-auto" style="max-height: 400px;">
+            <table class="table">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Date</th>
+                        <th scope="col">Event name</th>
+                        <th scope="col">Edit</th>
+                        <th scope="col">Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for event in event_list%}
+                    <tr>
+                        <th>{{event.date}}</th>
+                        <th>{{event.name}}</th>
+                        <td><button
+                                onclick="editEvent('{{event.id}}', '{{event.name}}', '{{event.date}}')"
+                                class="btn btn-primary" data-toggle="modal" data-target="#eventModal">Edit</button></td>
+                        <td><button onclick="startDeleteEvent('{{event.id}}', '{{event.name}}')" class="btn btn-danger"
+                                data-toggle="modal" data-target="#areYouSureModal">Delete</button></td>
+                    </tr>
+                    {%endfor%}
+                </tbody>
+            </table>
+        </div>
     </div>
-    <div class="col-md-6 my-auto">
-       
-    </div>
+</div>
+<div class="text-center mb-5">
+    <button onclick="add()" class="btn btn-info">Add a new Event or Post</button>
 </div>
 
 
@@ -142,6 +170,12 @@
         document.getElementById("title").value = title
         document.getElementById("datePost").value = date
         document.getElementById("text").value = decodeURIComponent(text)
+    }
+
+    function editEvent(id, name, date){
+        document.getElementById("editEvent").action = "/admin/post-events/edit-event/" + id
+        document.getElementById("event_name").value = name
+        document.getElementById("date").value = date
     }
 
     function startDeletePost(id, title) {
