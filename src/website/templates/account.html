@@ -30,7 +30,7 @@
             <div class="bg-light p-4 d-flex justify-content-end text-center">
                 <ul class="list-inline mb-0">
                     <li class="list-inline-item">
-                        <h5 class="font-weight-bold mb-0 d-block" id="fneg">€{{account["profit"]}}</h5><small id="profit" class="text-muted">Profit</small>
+                        <h5 class="font-weight-bold mb-0 d-block" id="fneg">€{{account["profit"] | round(2)}}</h5><small id="profit" class="text-muted">Profit</small>
                     </li>
                     <li class="list-inline-item">
                         <h5 class="font-weight-bold mb-0 d-block">{{account["session_amount"]}}</h5><small class="text-muted">Sessions</small>
@@ -51,19 +51,19 @@
                             <tbody>
                                 <tr>
                                     <td>Total Beginstack</td>
-                                    <td>{{account["total_beginstack"]}}</td>
+                                    <td>{{account["total_beginstack"]  | round(2)}}</td>
                                 </tr>
                                 <tr>
                                     <td>Total Added Chips</td>
-                                    <td>{{account["total_added_chips"]}}</td>
+                                    <td>{{account["total_added_chips"]  | round(2)}}</td>
                                 </tr>
                                 <tr>
                                     <td>Total Endstack</td>
-                                    <td>{{account["total_endstack"]}}</td>
+                                    <td>{{account["total_endstack"]  | round(2)}}</td>
                                 </tr>
                                 <tr>
                                     <td>Average Profit</td>
-                                    <td name="negative">{{account["average_profit"]}}</td>
+                                    <td name="negative">{{account["average_profit"]  | round(2)}}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -73,19 +73,19 @@
                             <tbody>
                                 <tr>
                                     <td>Average Beginstack</td>
-                                    <td>{{account["average_beginstack"]}}</td>
+                                    <td>{{account["average_beginstack"]  | round(2)}}</td>
                                 </tr>
                                 <tr>
                                     <td>Average Added Chips</td>
-                                    <td>{{account["average_added_chips"]}}</td>
+                                    <td>{{account["average_added_chips"]  | round(2)}}</td>
                                 </tr>
                                 <tr>
                                     <td>Average Endstack</td>
-                                    <td>{{account["average_endstack"]}}</td>
+                                    <td>{{account["average_endstack"]  | round(2)}}</td>
                                 </tr>
                                 <tr>
                                     <td>Profit Per Hour</td>
-                                    <td name="negative">{{account["profit_hour"]}}</td>
+                                    <td name="negative">{{account["profit_hour"]  | round(2)}}</td>
                                 </tr>
                             </tbody>
                         </table>
