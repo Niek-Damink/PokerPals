@@ -223,7 +223,7 @@ def adminAddSession(amount):
         db.session.add(new_person_session)
     db.session.commit()
     flash("Succesfully added the new session", "success")
-    return redirect(url_for('admin.adminAddSessions'))
+    return redirect(url_for('admin.adminSessions'))
     
 
 @admin.route('/post-events', methods=['GET'])

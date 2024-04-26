@@ -205,7 +205,7 @@
 
     function editSession(id) {
         var nodes = document.getElementsByName(id)
-        document.getElementById("editForm").action += nodes[0].innerText
+        document.getElementById("editForm").action += id
         document.getElementById("modalLabel").innerText = "Edit session " + nodes[0].innerText
         document.getElementById("host").value = nodes[2].innerText
         document.getElementById("date").value = nodes[1].innerText
