@@ -231,6 +231,13 @@ def adminAddSession(amount):
 def adminPostEvents():
     if current_user.name != "Admin":
         return redirect(url_for('auth.login'))
+    return render_template("admin/adminPostEventsOverview.html", user = current_user, post_list = getPosts())
+
+@admin.route('/post-events/add', methods=['GET'])
+@login_required
+def adminAddPostEvents():
+    if current_user.name != "Admin":
+        return redirect(url_for('auth.login'))
     return render_template("admin/adminPostEvents.html", user = current_user)
 
 @admin.route('/post-events/add-post', methods=['POST'])
@@ -243,10 +250,10 @@ def adminAddPost():
     text = request.form.get('text')
     if len(title) == 0:
         flash("Please enter a title", "error")
-        return redirect(url_for("admin.adminPostEvents"))
+        return redirect(url_for("admin.adminAddPostEvents"))
     elif len(text) == 0:
         flash("Pleas enter some text", "error")
-        return redirect(url_for("admin.adminPostEvents"))
+        return redirect(url_for("admin.adminAddPostEvents"))
     date = datetime.datetime.today().strftime('%d/%m/%Y')
     print(date)
     id = getMaxPostID()
@@ -260,13 +267,50 @@ def adminAddPost():
         flash("Succesfully created post with picture")
     elif len(file.filename) > 0:
         flash("File is not allowed, allowed formats are png and jpg", "error")  
-        return redirect(url_for("admin.adminPostEvents"))
+        return redirect(url_for("admin.adminAddPostEvents"))
     else:
         new_post = Post(id=id, imgURL="NoPicture", title = title, text = text, date = date)
         db.session.add(new_post)
         db.session.commit()
         flash("Succesfully created post")  
     return redirect(url_for("admin.adminPostEvents"))
+
+@admin.route('/post-events/edit-post/<id>', methods=['POST'])
+@login_required
+def adminEditPost(id):
+    if current_user.name != "Admin":
+        return redirect(url_for('auth.login'))
+    file = request.files['file']
+    title = request.form.get('title')
+    text = request.form.get('text')
+    the_date =  request.form.get("datePost")
+    date = request.form.get("datePost").split("/")
+    if len(title) == 0:
+        flash("Please enter a title", "error")
+        return redirect(url_for("admin.adminPostEvents"))
+    elif len(text) == 0:
+        flash("Pleas enter some text", "error")
+        return redirect(url_for("admin.adminPostEvents"))
+    elif len(date) != 3 or not date[0].isdigit() or not date[1].isdigit() or not date[2].isdigit() or len(date[0]) != 2 or len(date[1]) != 2 or len(date[2]) != 4:
+        flash("Please fill in a correct date (DD/MM/YYYY)", "error")
+        return redirect(url_for("admin.adminPostEvents"))
+    if(allowed_file(file.filename)):
+        fileName = "post" + str(id) + "." + file.filename.rsplit('.', 1)[1]
+        UPLOADS_PATH = join(dirname(realpath(__file__)), 'static/pictures/' + fileName)
+        file.save(UPLOADS_PATH)
+        imgURL="pictures/" + fileName
+        Post.query.filter(Post.id == id).update({Post.title: title, Post.date: the_date, Post.imgURL: imgURL, Post.text: text})
+        db.session.commit()
+        flash("Succesfully edited post with picture")
+    elif len(file.filename) > 0:
+        flash("File is not allowed, allowed formats are png and jpg", "error")  
+        return redirect(url_for("admin.adminPostEvents"))
+    else:
+        Post.query.filter(Post.id == id).update({Post.title: title, Post.date: the_date, Post.text: text})
+        db.session.commit()
+        flash("Succesfully edited post")  
+    return redirect(url_for("admin.adminPostEvents"))
+    
 
 @admin.route('/post-events/add-event', methods=['POST'])
 @login_required
@@ -285,7 +329,7 @@ def adminAddEvent():
     db.session.add(new_event)
     db.session.commit()
     flash("Successfully added new Event")
-    return redirect(url_for('admin.adminPostEvents'))
+    return redirect(url_for('admin.adminPostEventsOverview'))
 
 def allowed_file(filename):
     return '.' in filename and \
