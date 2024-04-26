@@ -4,7 +4,7 @@
 <div class="row">
     <div class="col m-5">
         <h3 align="center" class="mb-5">Posts</h3>
-        <div class="col overflow-auto" style="max-height: 400px;">
+        <div class="col overflow-auto" style="max-height: 300px;">
             <table class="table">
                 <thead class="thead-dark">
                     <tr>
@@ -32,7 +32,7 @@
     </div>
     <div class="col m-5">
         <h3 align="center" class="mb-5">Events</h3>
-        <div class="col overflow-auto" style="max-height: 400px;">
+        <div class="col overflow-auto" style="max-height: 300px;">
             <table class="table">
                 <thead class="thead-dark">
                     <tr>
@@ -47,8 +47,7 @@
                     <tr>
                         <th>{{event.date}}</th>
                         <th>{{event.name}}</th>
-                        <td><button
-                                onclick="editEvent('{{event.id}}', '{{event.name}}', '{{event.date}}')"
+                        <td><button onclick="editEvent('{{event.id}}', '{{event.name}}', '{{event.date}}')"
                                 class="btn btn-primary" data-toggle="modal" data-target="#eventModal">Edit</button></td>
                         <td><button onclick="startDeleteEvent('{{event.id}}', '{{event.name}}')" class="btn btn-danger"
                                 data-toggle="modal" data-target="#areYouSureModal">Delete</button></td>
@@ -72,138 +71,141 @@
 
 
 
-<div class="modal fade" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-body">
-            <form method="POST" id="editEvent" action="/admin/post-events/edit-event">
-                <h3 align="center">Edit event</h3>
-                <div class="form-group">
-                    <label for="event_name">Event Name</label>
-                    <input type="text" class="form-control" id="event_name" name="event_name"
-                        placeholder="Enter name" />
-                </div>
-                <div class="form-group">
-                    <label for="date">Date</label>
-                    <input type="text" class="form-control" id="date" name="date"
-                        placeholder="DD/MM/YYYY" />
-                </div>
-            </form>
+        <div class="modal-content">
+            <div class="modal-body">
+                <form method="POST" id="editEvent" action="/admin/post-events/edit-event">
+                    <h3 align="center">Edit event</h3>
+                    <div class="form-group">
+                        <label for="event_name">Event Name</label>
+                        <input type="text" class="form-control" id="event_name" name="event_name"
+                            placeholder="Enter name" />
+                    </div>
+                    <div class="form-group">
+                        <label for="date">Date</label>
+                        <input type="text" class="form-control" id="date" name="date" placeholder="DD/MM/YYYY" />
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" onclick="submitEditFormEvent()" class="btn btn-primary">Save changes</button>
+            </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" onclick="submitEditFormEvent()" class="btn btn-primary">Save changes</button>
-        </div>
-      </div>
     </div>
-  </div>
-
-  
-<div class="modal fade" id="postModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-body">
-            <form method="POST" id="editPost" action="/admin/post-events/edit-post/" enctype="multipart/form-data">
-                <h3 align="center" class="mb-5">Edit post</h3>
-                <div class="form-group">
-                    <input type="text" class="form-control font-weight-bold" id="title" name="title"
-                        placeholder="Title"/>
-                </div>
-                <div class="form-group">
-                    <input type="text" class="form-control" id="datePost" name="datePost"
-                        placeholder="DD/MM/YYYY"/>
-                </div>
-                <div class="form-group">
-                    <textarea class="form-control" id="text" name="text" placeholder="Type your text here..." rows="10"></textarea>
-                </div>
-                <p>Edit image</p>
-                <div class="input-group mb-3">
-                    <input type="file" class="form-control" name="file" id="inputGroupFile01">
-                </div>
-            </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" onclick="submitEditFormPost()" class="btn btn-primary">Save changes</button>
-        </div>
-      </div>
-    </div>
-  </div>
+</div>
 
 
-  <div class="modal fade" id="areYouSureModal" tabindex="-1" role="dialog" aria-labelledby="areYouSutrModalLabel" aria-hidden="true">
+<div class="modal fade" id="postModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header text-center">
-          <h5 class="modal-title" id="areYouSureModalLabel">Are you sure you want to delete</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+        <div class="modal-content">
+            <div class="modal-body">
+                <form method="POST" id="editPost" action="/admin/post-events/edit-post/" enctype="multipart/form-data">
+                    <h3 align="center" class="mb-5">Edit post</h3>
+                    <div class="form-group">
+                        <input type="text" class="form-control font-weight-bold" id="title" name="title"
+                            placeholder="Title" />
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="datePost" name="datePost"
+                            placeholder="DD/MM/YYYY" />
+                    </div>
+                    <div class="form-group">
+                        <textarea class="form-control" id="text" name="text" placeholder="Type your text here..."
+                            rows="10"></textarea>
+                    </div>
+                    <p>Edit image</p>
+                    <div class="input-group mb-3">
+                        <input type="file" class="form-control" name="file" id="inputGroupFile01">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" onclick="submitEditFormPost()" class="btn btn-primary">Save changes</button>
+            </div>
         </div>
-        <div class="modal-body">
-            <div class="container text-center">
-          <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
-          <button type="button" id="deleteYes" onclick="" class="btn btn-primary">Yes</button>
-        </div>
-        </div>
-      </div>
     </div>
-  </div>
+</div>
+
+
+<div class="modal fade" id="areYouSureModal" tabindex="-1" role="dialog" aria-labelledby="areYouSutrModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h5 class="modal-title" id="areYouSureModalLabel">Are you sure you want to delete</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container text-center">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+                    <button type="button" id="deleteYes" onclick="" class="btn btn-primary">Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {%block js%}
 <script>
-    function add(){
+    function add() {
         location.href = "/admin/post-events/add"
     }
 
-    function submitEditFormEvent(){
+    function submitEditFormEvent() {
         document.getElementById("editEvent").submit()
     }
 
-    function submitEditFormPost(){
+    function submitEditFormPost() {
         document.getElementById("editPost").submit()
     }
 
-    function editPost(id, title, date, text){
+    function editPost(id, title, date, text) {
         document.getElementById("editPost").action = "/admin/post-events/edit-post/" + id
         document.getElementById("title").value = title
         document.getElementById("datePost").value = date
         document.getElementById("text").value = decodeURIComponent(text)
     }
 
-    function editEvent(id, name, date){
+    function editEvent(id, name, date) {
         document.getElementById("editEvent").action = "/admin/post-events/edit-event/" + id
         document.getElementById("event_name").value = name
         document.getElementById("date").value = date
     }
 
     function startDeletePost(id, title) {
-        document.getElementById("deleteYes").onclick = function() {
+        document.getElementById("deleteYes").onclick = function () {
             deletePost(id);
         };
-        document.getElementById("areYouSureModalLabel").innerText = "Are you sure you want to delete post '"+ title +"'"
+        document.getElementById("areYouSureModalLabel").innerText = "Are you sure you want to delete post '" + title + "'"
     }
 
     function startDeleteEvent(id, name) {
-        document.getElementById("deleteYes").onclick = function() {
+        document.getElementById("deleteYes").onclick = function () {
             deleteEvent(id);
         };
-        document.getElementById("areYouSureModalLabel").innerText = "Are you sure you want to delete event '"+ name +"'"
+        document.getElementById("areYouSureModalLabel").innerText = "Are you sure you want to delete event '" + name + "'"
     }
 
-    function deleteEvent(id){
+    function deleteEvent(id) {
         fetch("/admin/post-events/delete-event/" + id, {
             method: 'DELETE'
-        }).then(function() {
+        }).then(function () {
             location.reload();
         });
     }
 
-    function deletePost(id){
+    function deletePost(id) {
         fetch("/admin/post-events/delete-post/" + id, {
             method: 'DELETE'
-        }).then(function() {
+        }).then(function () {
             location.reload();
         });
     }

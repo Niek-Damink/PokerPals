@@ -12,6 +12,7 @@
   <title>{% block title %}Home{% endblock %}</title>
 </head>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+
 <body>
   {% if user.is_authenticated %}
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
@@ -39,11 +40,11 @@
             <a class="nav-link text-center" href="/account">
               <div class="circular--landscape-big">
                 <div class="image-container">
-                <img src="{{url_for('static', filename= user.imgURL)}}">
-              </div>
+                  <img src="{{url_for('static', filename= user.imgURL)}}">
+                </div>
               </div>
               <p>{{user.name}}</p>
-              </a>
+            </a>
       </div>
     </div>
     </a>
@@ -54,68 +55,102 @@
   </nav>
   {% endif %}
 
-    {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-        {% for category, message in messages %}
-        {% if category == 'error' %}
-        <div class="alert alert-danger alertdismissable fade show" role="alert">
-            {{ message }}
-            <button type="button" class="close" data-dismiss="alert">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        {% else %}
-        <div class="alert alert-success alertdismissable fade show" role="alert">
-            {{ message }}
-            <button type="button" class="close" data-dismiss="alert">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        {% endif %}
-        {% endfor %}
-    {% endif%}
-    {% endwith %}
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+  {% for category, message in messages %}
+  {% if category == 'error' %}
+  <div class="alert alert-danger alertdismissable fade show" role="alert">
+    {{ message }}
+    <button type="button" class="close" data-dismiss="alert">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  {% else %}
+  <div class="alert alert-success alertdismissable fade show" role="alert">
+    {{ message }}
+    <button type="button" class="close" data-dismiss="alert">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  {% endif %}
+  {% endfor %}
+  {% endif%}
+  {% endwith %}
 
-    <div class="container-fluid">
-        {% block content%}
-        {% endblock %}
-    </div>
+  <div class="container-fluid">
+    {% block content%}
+    {% endblock %}
+  </div>
 
-    {%block js%}
-    {%endblock%}
+  {%block js%}
+  {%endblock%}
 
-    <script
-      src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-      crossorigin="anonymous"
-    ></script>
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
 
 
-  </body>
+</body>
+
 </html>
 
 <style>
-  .circular--landscape { display: inline-block; position: relative; width: 50px; height: 50px; overflow: hidden; border-radius: 50%; } 
-  .circular--landscape img { width: auto; height: 200%; margin-left: -5px; transition: opacity 0.3s ease-in-out;}
+  .circular--landscape {
+    display: inline-block;
+    position: relative;
+    width: 50px;
+    height: 50px;
+    overflow: hidden;
+    border-radius: 50%;
+  }
 
-  .circular--landscape-big { display: inline-block; position: relative; width: 60px; height: 60px; overflow: hidden; border-radius: 50%; } 
-  .circular--landscape-big img { width: auto; height: 200%; margin-left: -5px; transition: opacity 0.3s ease-in-out;}
+  .circular--landscape img {
+    width: auto;
+    height: 200%;
+    margin-left: -5px;
+    transition: opacity 0.3s ease-in-out;
+  }
 
-  .circular--landscape-large { display: inline-block; position: relative; width: 100px; height: 100px; overflow: hidden; border-radius: 50%; } 
-  .circular--landscape-large img { width: auto; height: 200%; margin-left: -5px; transition: opacity 0.3s ease-in-out;}
+  .circular--landscape-big {
+    display: inline-block;
+    position: relative;
+    width: 60px;
+    height: 60px;
+    overflow: hidden;
+    border-radius: 50%;
+  }
+
+  .circular--landscape-big img {
+    width: auto;
+    height: 200%;
+    margin-left: -5px;
+    transition: opacity 0.3s ease-in-out;
+  }
+
+  .circular--landscape-large {
+    display: inline-block;
+    position: relative;
+    width: 100px;
+    height: 100px;
+    overflow: hidden;
+    border-radius: 50%;
+  }
+
+  .circular--landscape-large img {
+    width: auto;
+    height: 200%;
+    margin-left: -5px;
+    transition: opacity 0.3s ease-in-out;
+  }
 
   .image-container {
     width: 100%;
     height: 100%;
-}
+  }
 </style>

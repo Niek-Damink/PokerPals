@@ -14,8 +14,9 @@
             </div>
             <div class="col-auto m-3">
                 <label class="mr-sm-2" for="input Value">Value</label>
-                <input type="text" onkeyup="saveValue(this)" class="form-control" name="inputValue" id="inputValue" placeholder="Value">
-                </div>
+                <input type="text" onkeyup="saveValue(this)" class="form-control" name="inputValue" id="inputValue"
+                    placeholder="Value">
+            </div>
 
             <div class="col m-3">
                 <label class="mr-sm-2" for="order">Order on</label>
@@ -26,13 +27,13 @@
                     <option value="3">Players</option>
                 </select>
             </div>
-        <div class="col-auto m-3 mt-5">
-            <button type="submit" class="btn btn-primary">Search</button>
+            <div class="col-auto m-3 mt-5">
+                <button type="submit" class="btn btn-primary">Search</button>
+            </div>
+            <div class="col-auto m-3 mt-5">
+                <button type="button" onclick="addSession()" class="btn btn-info">Add a new session</button>
+            </div>
         </div>
-        <div class="col-auto m-3 mt-5">
-            <button type="button" onclick="addSession()" class="btn btn-info">Add a new session</button>
-        </div>
-    </div>
     </form>
     <div class="row">
         <div class="col overflow-auto" style="max-height: 400px;">
@@ -74,8 +75,11 @@
                         {%endif%}
                         <td name="{{session.session_ID}}">{{session.players}}</td>
                         <td name="{{session.session_ID}}">{{session.pot}}</td>
-                        <td><button onclick="editSession('{{session.session_ID}}')" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Edit</button></td>
-                        <td><button onclick="startDelete('{{session.session_ID}}', '{{session.number}}')" class="btn btn-danger" data-toggle="modal" data-target="#areYouSureModal">Delete</button></td>
+                        <td><button onclick="editSession('{{session.session_ID}}')" class="btn btn-primary"
+                                data-toggle="modal" data-target="#exampleModal">Edit</button></td>
+                        <td><button onclick="startDelete('{{session.session_ID}}', '{{session.number}}')"
+                                class="btn btn-danger" data-toggle="modal"
+                                data-target="#areYouSureModal">Delete</button></td>
                     </tr>
                     {%endfor%}
                 </tbody>
@@ -85,100 +89,101 @@
 </div>
 
 
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="modalLabel">title</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-            <form id="editForm" method="POST" action="/admin/sessions/editSession/">
-                <h5 class="mb-1 py-3">Session</h5>
-                <div class="form-row">
-                  <div class="form-group col-md-6">
-                    <label>Host</label>
-                    <input type="text" class="form-control" name="host" id="host" placeholder="Host">
-                  </div>
-                  <div class="form-group col-md-6">
-                    <label>Date</label>
-                    <input type="text" class="form-control" name="date" id="date"
-                      placeholder="DD/MM/YYYY">
-                  </div>
-                </div>
-                <div class="form-row">
-                  <div class="form-group col">
-                    <label>Duration</label>
-                    <input type="text" class="form-control" name="duration" id="duration"
-                      placeholder="duration">
-                  </div>
-                  <div class="form-group col">
-                    <label>Small blind</label>
-                    <input type="text" class="form-control" name="smallblind" id="smallblind"
-                      placeholder="Small blind">
-                  </div>
-                  <div class="form-group col">
-                    <label>Big blind</label>
-                    <input type="text" class="form-control" name="bigblind" id="bigblind"
-                      placeholder="Big blind">
-                  </div>
-                </div>
-                <div class="form-row p-2 px-4">
-                  <div class="form-check col">
-                    <input class="form-check-input" type="checkbox" name="straddle" id="straddle">
-                    <label class="form-check-label" for="gridCheck">
-                      straddle
-                    </label>
-                  </div>
-                  <div class="form-check col">
-                    <input class="form-check-input" type="checkbox" name="sevendeuce" id="SevenDeuce">
-                    <label class="form-check-label" for="gridCheck">
-                      72
-                    </label>
-                  </div>
-                </div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel">title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editForm" method="POST" action="/admin/sessions/editSession/">
+                    <h5 class="mb-1 py-3">Session</h5>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label>Host</label>
+                            <input type="text" class="form-control" name="host" id="host" placeholder="Host">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>Date</label>
+                            <input type="text" class="form-control" name="date" id="date" placeholder="DD/MM/YYYY">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label>Duration</label>
+                            <input type="text" class="form-control" name="duration" id="duration"
+                                placeholder="duration">
+                        </div>
+                        <div class="form-group col">
+                            <label>Small blind</label>
+                            <input type="text" class="form-control" name="smallblind" id="smallblind"
+                                placeholder="Small blind">
+                        </div>
+                        <div class="form-group col">
+                            <label>Big blind</label>
+                            <input type="text" class="form-control" name="bigblind" id="bigblind"
+                                placeholder="Big blind">
+                        </div>
+                    </div>
+                    <div class="form-row p-2 px-4">
+                        <div class="form-check col">
+                            <input class="form-check-input" type="checkbox" name="straddle" id="straddle">
+                            <label class="form-check-label" for="gridCheck">
+                                straddle
+                            </label>
+                        </div>
+                        <div class="form-check col">
+                            <input class="form-check-input" type="checkbox" name="sevendeuce" id="SevenDeuce">
+                            <label class="form-check-label" for="gridCheck">
+                                72
+                            </label>
+                        </div>
+                    </div>
                 </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" onclick="submitEditForm()" class="btn btn-primary">Save changes</button>
+            </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" onclick="submitEditForm()" class="btn btn-primary">Save changes</button>
-        </div>
-      </div>
     </div>
-  </div>
-  <div class="modal fade" id="areYouSureModal" tabindex="-1" role="dialog" aria-labelledby="areYouSutrModalLabel" aria-hidden="true">
+</div>
+<div class="modal fade" id="areYouSureModal" tabindex="-1" role="dialog" aria-labelledby="areYouSutrModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="areYouSureModalLabel">Are you sure you want to delete</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="areYouSureModalLabel">Are you sure you want to delete</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container text-center">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+                    <button type="button" id="deleteYes" onclick="" class="btn btn-primary">Yes</button>
+                </div>
+            </div>
         </div>
-        <div class="modal-body">
-            <div class="container text-center">
-          <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
-          <button type="button" id="deleteYes" onclick="" class="btn btn-primary">Yes</button>
-        </div>
-        </div>
-      </div>
     </div>
-  </div>
+</div>
 {% endblock %}
 
 {%block js%}
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
         loadDocument()
     });
 
-    function addSession(){
+    function addSession() {
         location.href = "/admin/sessions/add_session"
     }
 
-    function loadDocument(){
+    function loadDocument() {
         active1 = window.sessionStorage.getItem("active1")
         active2 = window.sessionStorage.getItem("active2")
         value = window.sessionStorage.getItem("inputValue")
@@ -187,18 +192,18 @@
         document.getElementById("inputValue").value = value
     }
 
-    function saveChoice(element, form){
+    function saveChoice(element, form) {
         window.sessionStorage.setItem(form, element.selectedIndex)
     }
 
-    function saveValue(element){
+    function saveValue(element) {
         window.sessionStorage.setItem(element.id, element.value)
     }
 
     function deleteSession(id) {
         fetch("/admin/sessions/delete/" + id, {
             method: 'DELETE'
-        }).then(function() {
+        }).then(function () {
             location.reload();
         });
     }
@@ -216,15 +221,15 @@
         document.getElementById("straddle").checked = nodes[7].innerText == "On"
     }
 
-    function submitEditForm(){
+    function submitEditForm() {
         document.getElementById('editForm').submit()
     }
 
     function startDelete(id, number) {
-        document.getElementById("deleteYes").onclick = function() {
+        document.getElementById("deleteYes").onclick = function () {
             deleteSession(id);
         };
-        document.getElementById("areYouSureModalLabel").innerText = "Are you sure you want to delete session "+ number
+        document.getElementById("areYouSureModalLabel").innerText = "Are you sure you want to delete session " + number
     }
 </script>
 {%endblock%}

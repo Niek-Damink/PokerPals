@@ -9,17 +9,17 @@
                         {%if account['imgURL'] != "/pictures/account.png"%}
                         <div class="circular--landscape-large">
                             <div class="image-container">
-                        <img src="{{url_for('static', filename= account['imgURL'])}}">
-                        </div>
+                                <img src="{{url_for('static', filename= account['imgURL'])}}">
+                            </div>
                         </div>
                         {%else%}
-                        <img class="rounded-circle" src="{{url_for('static', filename= account['imgURL'])}}" width="100px"
-                            height="100px">
+                        <img class="rounded-circle" src="{{url_for('static', filename= account['imgURL'])}}"
+                            width="100px" height="100px">
                         {%endif%}
-                            {%if user.name == account["name"]%}
-                            <a onclick="deleteStorage()" href="/logout" class="btn btn-dark btn-sm btn-block">Logout</a>
-                            {%endif%}
-                        </div>
+                        {%if user.name == account["name"]%}
+                        <a onclick="deleteStorage()" href="/logout" class="btn btn-dark btn-sm btn-block">Logout</a>
+                        {%endif%}
+                    </div>
                     <div class="media-body mb-5 text-white">
                         <h4 class="mt-0 mb-0">{{account["name"]}}</h4>
                         <p class="small mb-4"> Poker pro </p>
@@ -30,13 +30,16 @@
             <div class="bg-light p-4 d-flex justify-content-end text-center">
                 <ul class="list-inline mb-0">
                     <li class="list-inline-item">
-                        <h5 class="font-weight-bold mb-0 d-block" id="fneg">€{{account["profit"] | round(2)}}</h5><small id="profit" class="text-muted">Profit</small>
+                        <h5 class="font-weight-bold mb-0 d-block" id="fneg">€{{account["profit"] | round(2)}}</h5><small
+                            id="profit" class="text-muted">Profit</small>
                     </li>
                     <li class="list-inline-item">
-                        <h5 class="font-weight-bold mb-0 d-block">{{account["session_amount"]}}</h5><small class="text-muted">Sessions</small>
+                        <h5 class="font-weight-bold mb-0 d-block">{{account["session_amount"]}}</h5><small
+                            class="text-muted">Sessions</small>
                     </li>
                     <li class="list-inline-item">
-                        <h5 class="font-weight-bold mb-0 d-block">{{account["host_amount"]}}</h5><small class="text-muted">Hosted Sessions</small>
+                        <h5 class="font-weight-bold mb-0 d-block">{{account["host_amount"]}}</h5><small
+                            class="text-muted">Hosted Sessions</small>
                     </li>
                 </ul>
             </div>
@@ -51,19 +54,19 @@
                             <tbody>
                                 <tr>
                                     <td>Total Beginstack</td>
-                                    <td>{{account["total_beginstack"]  | round(2)}}</td>
+                                    <td>{{account["total_beginstack"] | round(2)}}</td>
                                 </tr>
                                 <tr>
                                     <td>Total Added Chips</td>
-                                    <td>{{account["total_added_chips"]  | round(2)}}</td>
+                                    <td>{{account["total_added_chips"] | round(2)}}</td>
                                 </tr>
                                 <tr>
                                     <td>Total Endstack</td>
-                                    <td>{{account["total_endstack"]  | round(2)}}</td>
+                                    <td>{{account["total_endstack"] | round(2)}}</td>
                                 </tr>
                                 <tr>
                                     <td>Average Profit</td>
-                                    <td name="negative">{{account["average_profit"]  | round(2)}}</td>
+                                    <td name="negative">{{account["average_profit"] | round(2)}}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -73,19 +76,19 @@
                             <tbody>
                                 <tr>
                                     <td>Average Beginstack</td>
-                                    <td>{{account["average_beginstack"]  | round(2)}}</td>
+                                    <td>{{account["average_beginstack"] | round(2)}}</td>
                                 </tr>
                                 <tr>
                                     <td>Average Added Chips</td>
-                                    <td>{{account["average_added_chips"]  | round(2)}}</td>
+                                    <td>{{account["average_added_chips"] | round(2)}}</td>
                                 </tr>
                                 <tr>
                                     <td>Average Endstack</td>
-                                    <td>{{account["average_endstack"]  | round(2)}}</td>
+                                    <td>{{account["average_endstack"] | round(2)}}</td>
                                 </tr>
                                 <tr>
                                     <td>Profit Per Hour</td>
-                                    <td name="negative">{{account["profit_hour"]  | round(2)}}</td>
+                                    <td name="negative">{{account["profit_hour"] | round(2)}}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -115,7 +118,8 @@
                                 <td>{{session.begin_stack | round(2)}}</td>
                                 <td>{{session.added_chips | round(2)}}</td>
                                 <td>{{session.end_stack | round(2)}}</td>
-                                <td name="negative">{{(session.end_stack - session.added_chips - session.begin_stack) | round(2)}}</td>
+                                <td name="negative">{{(session.end_stack - session.added_chips - session.begin_stack) |
+                                    round(2)}}</td>
                                 <td><a href="/sessions/{{session.session_ID}}">Session</a></td>
                             </tr>
                             {%endfor%}
@@ -138,26 +142,26 @@
 
 {%block js%}
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
         MakeNegative()
     });
 
     function MakeNegative() {
         TDs = document.getElementsByName('negative');
-        for (i=0; i<TDs.length; i++) {
-                temp = TDs[i];
-                if (temp.firstChild.nodeValue.indexOf('-') == 0){
-                    temp.className = "text-danger";
-                } 
-                else {
-                    temp.className = "text-success";
-                }
+        for (i = 0; i < TDs.length; i++) {
+            temp = TDs[i];
+            if (temp.firstChild.nodeValue.indexOf('-') == 0) {
+                temp.className = "text-danger";
             }
+            else {
+                temp.className = "text-success";
+            }
+        }
         TD = document.getElementById('fneg')
-        if (TD.firstChild.nodeValue.indexOf('€-') == 0){
+        if (TD.firstChild.nodeValue.indexOf('€-') == 0) {
             TD.className = "font-weight-bold mb-0 d-block text-danger";
             document.getElementById("profit").innerText = "Loss"
-        } 
+        }
         else {
             TD.className = "font-weight-bold mb-0 d-block text-success";
         }
@@ -168,47 +172,49 @@
 <script>
     const xArray = JSON.parse("{{x_list}}");
     const yArray = JSON.parse("{{y_list}}");
-    const yMin = Math.floor((Math.min(-100,Math.min(...yArray))) / 50)*50;
-    
-    const yMax = Math.ceil((Math.max(100, Math.max(...yArray))) / 50)*50;
-    
-   
+    const yMin = Math.floor((Math.min(-100, Math.min(...yArray))) / 50) * 50;
+
+    const yMax = Math.ceil((Math.max(100, Math.max(...yArray))) / 50) * 50;
+
+
 
     new Chart("myChart", {
         type: "line",
         data: {
-          labels: xArray,
-          datasets: [{
-            fill: false,
-            lineTension: 0,
-            backgroundColor: "rgba(0,0,255,1.0)",
-            borderColor: "rgba(0,0,0,1.0)",
-            pointBackgroundColor: "rgba(0,0,0,1.0)",
-            pointBorderColor: "rgba(0,0,0,1.0)",
-            data: yArray
-          }]
+            labels: xArray,
+            datasets: [{
+                fill: false,
+                lineTension: 0,
+                backgroundColor: "rgba(0,0,255,1.0)",
+                borderColor: "rgba(0,0,0,1.0)",
+                pointBackgroundColor: "rgba(0,0,0,1.0)",
+                pointBorderColor: "rgba(0,0,0,1.0)",
+                data: yArray
+            }]
         },
         options: {
-          legend: {display: false},
-          scales: {
-            xAxes: [{
-                scaleLabel: {
-                  display: true,
-                  labelString: 'Session'
-                }}],
-            yAxes: [{
-                scaleLabel: {
-                  display: true,
-                  labelString: 'Total profit/loss'
-                },
-                ticks: {min: yMin, max:yMax}}],
-            
-          }
-        }
-      });
+            legend: { display: false },
+            scales: {
+                xAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Session'
+                    }
+                }],
+                yAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Total profit/loss'
+                    },
+                    ticks: { min: yMin, max: yMax }
+                }],
 
-      function deleteStorage(){
+            }
+        }
+    });
+
+    function deleteStorage() {
         window.sessionStorage.clear()
-      }
-    </script>
+    }
+</script>
 {%endblock%}

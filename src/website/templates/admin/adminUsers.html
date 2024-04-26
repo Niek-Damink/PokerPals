@@ -38,92 +38,96 @@
 
 
     <div class="col-md-6 mt-5 text-center">
-        <div class="container w-75" >
-        <ul class="list-group">
-            <h5 class="mb-1 p-3">Members:</h5>
-            <div class="overflow-auto" style="max-height: 450px;">
-            {% for name, url, ignore in user_list%}
-            <li class="list-group-item list-group-item-action">
-                <div class="row">
-                    {%if url != "/pictures/account.png"%}
-                                    <div class="circular--landscape">
-                                        <div class="image-container">
+        <div class="container w-75">
+            <ul class="list-group">
+                <h5 class="mb-1 p-3">Members:</h5>
+                <div class="overflow-auto" style="max-height: 450px;">
+                    {% for name, url, ignore in user_list%}
+                    <li class="list-group-item list-group-item-action">
+                        <div class="row">
+                            {%if url != "/pictures/account.png"%}
+                            <div class="circular--landscape">
+                                <div class="image-container">
                                     <img src="{{url_for('static', filename= url)}}">
-                                    </div>
-                                    </div>
-                                    {%else%}
-                                    <img class="rounded-circle" src="{{url_for('static', filename= url)}}" width="50px"
-                                        height="50px">
-                                    {%endif%}
-                    <div class="col">
-                        {{ name }}
-                    </div>
-                    <div class="col-auto">
-                        <button type="button" class="btn btn-danger" onclick="startDelete('{{name}}')" data-toggle="modal" data-target="#areYouSureModal">&times;</button>
-                    </div>
-                    <div class="col-auto">
-                        <button type="button" class="btn btn-primary" onclick="editAccount('{{name}}')" data-toggle="modal" data-target="#exampleModal">
-                            <img src="{{url_for('static', filename='pictures/editIcon.png')}}" width="20px">
-                        </button>
-                    </div>
+                                </div>
+                            </div>
+                            {%else%}
+                            <img class="rounded-circle" src="{{url_for('static', filename= url)}}" width="50px"
+                                height="50px">
+                            {%endif%}
+                            <div class="col">
+                                {{ name }}
+                            </div>
+                            <div class="col-auto">
+                                <button type="button" class="btn btn-danger" onclick="startDelete('{{name}}')"
+                                    data-toggle="modal" data-target="#areYouSureModal">&times;</button>
+                            </div>
+                            <div class="col-auto">
+                                <button type="button" class="btn btn-primary" onclick="editAccount('{{name}}')"
+                                    data-toggle="modal" data-target="#exampleModal">
+                                    <img src="{{url_for('static', filename='pictures/editIcon.png')}}" width="20px">
+                                </button>
+                            </div>
+                        </div>
+                    </li>
+                    {% endfor %}
                 </div>
-            </li>
-            {% endfor %}
+            </ul>
         </div>
-        </ul>
-    </div>
     </div>
 </div>
 
 
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="modalLabel">title</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel">title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" id="editForm" action="users/edit/" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" class="form-control" id="editName" name="editName" />
+                    </div>
+                    <div class="input-group mb-3">
+                        <label for="name">Picture</label>
+                        <input type="file" class="form-control" name="file" id="inputGroupFile01">
+                    </div>
+                    <br />
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" onclick="submitEditForm()" class="btn btn-primary">Save changes</button>
+            </div>
         </div>
-        <div class="modal-body">
-              <form method="POST" id="editForm" action="users/edit/" enctype="multipart/form-data">
-                <div class="form-group">
-                    <label for="name">Name</label>
-                    <input type="text" class="form-control" id="editName" name="editName"/>
-                </div>
-                <div class="input-group mb-3">
-                    <label for="name">Picture</label>
-                    <input type="file" class="form-control" name="file" id="inputGroupFile01">
-                </div>
-                <br/>
-            </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" onclick="submitEditForm()" class="btn btn-primary">Save changes</button>
-        </div>
-      </div>
     </div>
-  </div>
+</div>
 
-  <div class="modal fade" id="areYouSureModal" tabindex="-1" role="dialog" aria-labelledby="areYouSutrModalLabel" aria-hidden="true">
+<div class="modal fade" id="areYouSureModal" tabindex="-1" role="dialog" aria-labelledby="areYouSutrModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="areYouSureModalLabel">Are you sure you want to delete</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="areYouSureModalLabel">Are you sure you want to delete</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container text-center">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+                    <button type="button" id="deleteYes" onclick="" class="btn btn-primary">Yes</button>
+                </div>
+            </div>
         </div>
-        <div class="modal-body">
-            <div class="container text-center">
-          <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
-          <button type="button" id="deleteYes" onclick="" class="btn btn-primary">Yes</button>
-        </div>
-        </div>
-      </div>
     </div>
-  </div>
+</div>
 {% endblock %}
 
 {% block js%}
@@ -131,25 +135,25 @@
     function deleteAccount(name) {
         fetch("/admin/users/delete/" + name, {
             method: 'DELETE'
-        }).then(function() {
+        }).then(function () {
             location.reload();
         });
     }
 
     function startDelete(name) {
-        document.getElementById("deleteYes").onclick = function() {
+        document.getElementById("deleteYes").onclick = function () {
             deleteAccount(name);
         };
-        document.getElementById("areYouSureModalLabel").innerText = "Are you sure you want to delete "+ name +"'s account"
+        document.getElementById("areYouSureModalLabel").innerText = "Are you sure you want to delete " + name + "'s account"
     }
 
-    function editAccount(name){
-        document.getElementById('modalLabel').innerText= "Edit " + name + "'s account"
+    function editAccount(name) {
+        document.getElementById('modalLabel').innerText = "Edit " + name + "'s account"
         document.getElementById('editName').value = name
         document.getElementById('editForm').action += name
     }
 
-    function submitEditForm(){
+    function submitEditForm() {
         document.getElementById('editForm').submit()
     }
 </script>

@@ -1,78 +1,78 @@
 {% extends "base.html" %} {% block title %}Leaderboard{% endblock %} {% block content %}
 <div class="container mt-4 py-4">
-    <h3 align="center">{{year}}</h3><br>
-    <form method="POST">
-      <div class="form-row align-items-center">
-          <div class="col m-3">
-              <label class="mr-sm-2" for="filter">Choose year</label>
-              <select onchange="saveChoice(this);" class="custom-select mr-sm-2" name="year" id="year">
-                <option id="-1" + i selected value="all">All-Time</option>
-                {%for i in range(dates|count())%}
-                  <option id="f{{i}}" + i value="{{dates[i][0]}}">{{dates[i][0]}}</option>
-                  {%endfor%}
-              </select>
-          </div>
-      <div class="col-auto m-3 mt-5">
-          <button type="submit" class="btn btn-primary">Search</button>
-      </div>
-  </div>
-  </form>
-    <table class="table">
-        <caption>Only players who have played a minimum of three sessions are on the leaderboard!</caption>
-        <thead class="thead-dark">
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">Name</th>
-            <th scope="col">Average Session Result</th>
-            <th scope="col">Average Hour Result</th>
-            <th scope="col">Played Sessions</th>
-            <th scope="col">Total Session Result</th>
-          </tr>
-        </thead>
-        <tbody>
-            {%for person in leaderboard%}
-          <tr>
-            <td>{{person[0]}}</td>
-            <td>{{person[1]}}</td>
-            <td name="number">{{person[2] | round(2)}}</td>
-            <td name="number">{{person[3] | round(2)}}</td>
-            <td>{{person[4]}}</td>
-            <td name="number">{{person[5] | round(2)}}</td>
-          </tr>
+  <h3 align="center">{{year}}</h3><br>
+  <form method="POST">
+    <div class="form-row align-items-center">
+      <div class="col m-3">
+        <label class="mr-sm-2" for="filter">Choose year</label>
+        <select onchange="saveChoice(this);" class="custom-select mr-sm-2" name="year" id="year">
+          <option id="-1" + i selected value="all">All-Time</option>
+          {%for i in range(dates|count())%}
+          <option id="f{{i}}" + i value="{{dates[i][0]}}">{{dates[i][0]}}</option>
           {%endfor%}
-        </tbody>
-      </table>
+        </select>
+      </div>
+      <div class="col-auto m-3 mt-5">
+        <button type="submit" class="btn btn-primary">Search</button>
+      </div>
+    </div>
+  </form>
+  <table class="table">
+    <caption>Only players who have played a minimum of three sessions are on the leaderboard!</caption>
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Name</th>
+        <th scope="col">Average Session Result</th>
+        <th scope="col">Average Hour Result</th>
+        <th scope="col">Played Sessions</th>
+        <th scope="col">Total Session Result</th>
+      </tr>
+    </thead>
+    <tbody>
+      {%for person in leaderboard%}
+      <tr>
+        <td>{{person[0]}}</td>
+        <td>{{person[1]}}</td>
+        <td name="number">{{person[2] | round(2)}}</td>
+        <td name="number">{{person[3] | round(2)}}</td>
+        <td>{{person[4]}}</td>
+        <td name="number">{{person[5] | round(2)}}</td>
+      </tr>
+      {%endfor%}
+    </tbody>
+  </table>
 </div>
 {% endblock %}
 
 {%block js%}
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        MakeNegative()
-        loadDocument()
-    });
+  document.addEventListener("DOMContentLoaded", function () {
+    MakeNegative()
+    loadDocument()
+  });
 
-    function loadDocument(){
-      choice = window.sessionStorage.getItem("choice")
-      document.getElementById("year").selectedIndex = choice
-      
+  function loadDocument() {
+    choice = window.sessionStorage.getItem("choice")
+    document.getElementById("year").selectedIndex = choice
+
   }
 
-    function MakeNegative() {
-        TDs = document.getElementsByName('number');
-        for (i=0; i<TDs.length; i++) {
-                temp = TDs[i];
-                if (temp.firstChild.nodeValue.indexOf('-') == 0){
-                    temp.className = "text-danger";
-                } 
-                else {
-                    temp.className = "text-success";
-                }
-            }
+  function MakeNegative() {
+    TDs = document.getElementsByName('number');
+    for (i = 0; i < TDs.length; i++) {
+      temp = TDs[i];
+      if (temp.firstChild.nodeValue.indexOf('-') == 0) {
+        temp.className = "text-danger";
+      }
+      else {
+        temp.className = "text-success";
+      }
     }
+  }
 
-    function saveChoice(element){
-      window.sessionStorage.setItem("choice", element.selectedIndex)
+  function saveChoice(element) {
+    window.sessionStorage.setItem("choice", element.selectedIndex)
   }
 </script>
 {% endblock %}
