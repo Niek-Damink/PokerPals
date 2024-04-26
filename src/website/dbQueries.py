@@ -122,6 +122,22 @@ def getSessionInformation(id):
         i += 1
     return user_sessions, enters
 
+def getSingleSession(id):
+    session = Session.query.filter(Session.session_ID == id).first()
+    total = 0
+    userSessions = User_Session.query.filter(User_Session.session_ID == session.session_ID)
+    players = userSessions.count()
+    for userSession in userSessions:
+            total += userSession.end_stack
+    session.players = players
+    session.pot = total
+    all_sessions = Session.query.order_by(func.substr(Session.date, 7, 10).desc(), func.substr(Session.date, 4, 5).desc(), func.substr(Session.date, 1, 2).desc()).all()
+    sessionNum = {}
+    for i, the_session in enumerate(all_sessions):
+        sessionNum[the_session.session_ID] = len(all_sessions)-i
+    session.number = sessionNum[session.session_ID]
+    return session
+
 def getLeaderboard():
     leaderboard = []
     users = User.query.all()
@@ -227,6 +243,7 @@ def getMaxPostID():
 def getPosts():
     all_posts = Post.query.order_by(Post.id.desc()).all()
     return all_posts
+
 
 def getEventsAdmin():
     all_events = Events.query.all()

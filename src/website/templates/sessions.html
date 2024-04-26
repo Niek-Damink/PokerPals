@@ -84,14 +84,16 @@
                         <th scope="col">Feature</th>
                         <th scope="col">Amount</th>
                     </tr>
+                    <tbody>
                     {%for feature, amount in total_statistics.items()%}
                     <tr>
                         <td>{{feature}}</td>
                         <td>{{amount | round(2)}}</td>
                     </tr>
                     {%endfor%}
+                </tbody>
                 </thead>
-                <tbody>
+            </table>
         </div>
     </div>
 </div>

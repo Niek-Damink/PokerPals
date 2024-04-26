@@ -1,37 +1,87 @@
 {% extends "base.html" %} {% block title %}Sessions Overview{% endblock %} {% block content %}
 <div class="container p-5">
-    <h3 align="center">Session overview of session {{session_information[0].session_ID}}</h3><br>
+    <h3 align="center">Session overview of session {{session.number}}</h3><br>
     <div class="row">
-        {%for user in session_information%}
-        {%if enters[user.person_name]%}
-        </div>
-        <div class="row">
-        {%endif%}
-        <div class="col">
-            <h5 align="center" class="mb-1 py-3">{{user.person_name}}</h5>
-            <table class="table table-striped">
+    <div class="col-9">
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Begin Stack</th>
+                    <th scope="col">Added chips</th>
+                    <th scope="col">End stack</th>
+                    <th scope="col">Result</th>
+                </tr>
+            </thead>
+            <tbody>
+                {%for user in session_information%}
+                <tr>
+                    <td>{{user.person_name}}</td>
+                    <td>{{user.begin_stack | round(2)}}</td>
+                    <td>{{user.added_chips | round(2)}}</td>
+                    <td>{{user.end_stack | round(2)}}</td>
+                    <td name="total">{{(user.end_stack - user.begin_stack - user.added_chips) | round(2)}}</td>
+                </tr>
+                {%endfor%}
+            </tbody>
+        </table>
+    </div>
+    <div class="col">
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Feature</th>
+                    <th scope="col">Amount</th>
+                </tr>
                 <tbody>
-                    <tr>
-                        <td>Begin stack</td>
-                        <td>{{user.begin_stack | round(2)}}</td>
-                    </tr>
-                    <tr>
-                        <td>Added chips</td>
-                        <td>{{user.added_chips | round(2)}}</td>
-                    </tr>
-                    <tr>
-                        <td>End stack</td>
-                        <td>{{user.end_stack | round(2)}}</td>
-                    </tr>
-                    <tr>
-                        <td>Result</td>
-                        <td name="total">{{(user.end_stack - user.begin_stack - user.added_chips) | round(2)}}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        
-        {%endfor%}
+                <tr>
+                    <td>Host</td>
+                    <td>{{session.host}}</td>
+                </tr>
+                <tr>
+                    <td>Date</td>
+                    <td>{{session.date}}</td>
+                </tr>
+                <tr>
+                    <td>Play Time</td>
+                    <td>{{session.duration | round(2)}}</td>
+                </tr>
+                <tr>
+                    <td>SB</td>
+                    <td>{{session.small_blind | round(2)}}</td>
+                </tr>
+                <tr>
+                    <td>BB</td>
+                    <td>{{session.big_blind | round(2)}}</td>
+                </tr>
+                <tr>
+                    <td>72</td>
+                    {%if session.seven_deuce%}
+                    <td>On</td>
+                    {%else%}
+                    <td>Off</td>
+                    {%endif%}
+                </tr>
+                <tr>
+                    <td>Straddle</td>
+                    {%if session.straddle%}
+                    <td>On</td>
+                    {%else%}
+                    <td>Off</td>
+                    {%endif%}
+                </tr>
+                <tr>
+                    <td>Players</td>
+                    <td>{{session.players | round(2)}}</td>
+                </tr>
+                <tr>
+                    <td>Pot</td>
+                    <td>{{session.pot | round(2)}}</td>
+                </tr>
+            </tbody>
+            </thead>
+        </table>
+    </div>
 </div>
 </div>
 {% endblock %}
