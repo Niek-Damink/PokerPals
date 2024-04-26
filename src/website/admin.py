@@ -233,6 +233,16 @@ def adminPostEvents():
         return redirect(url_for('auth.login'))
     return render_template("admin/adminPostEventsOverview.html", user = current_user, post_list = getPosts())
 
+@admin.route('/post-events/delete-post/<id>', methods=['DELETE'])
+@login_required
+def adminPostEventsDeletePost(id):
+    if current_user.name != "Admin":
+        return redirect(url_for('auth.login'))
+    flash("Successfully deleted post", "success")
+    deletePost(id)
+    return render_template("admin/adminPostEventsOverview.html", user = current_user, post_list = getPosts())
+
+
 @admin.route('/post-events/add', methods=['GET'])
 @login_required
 def adminAddPostEvents():

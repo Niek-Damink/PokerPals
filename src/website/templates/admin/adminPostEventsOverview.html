@@ -106,7 +106,7 @@
   <div class="modal fade" id="areYouSureModal" tabindex="-1" role="dialog" aria-labelledby="areYouSutrModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
-        <div class="modal-header">
+        <div class="modal-header text-center">
           <h5 class="modal-title" id="areYouSureModalLabel">Are you sure you want to delete</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
@@ -142,6 +142,21 @@
         document.getElementById("title").value = title
         document.getElementById("datePost").value = date
         document.getElementById("text").value = decodeURIComponent(text)
+    }
+
+    function startDeletePost(id, title) {
+        document.getElementById("deleteYes").onclick = function() {
+            deletePost(id);
+        };
+        document.getElementById("areYouSureModalLabel").innerText = "Are you sure you want to delete post '"+ title +"'"
+    }
+
+    function deletePost(id){
+        fetch("/admin/post-events/delete-post/" + id, {
+            method: 'DELETE'
+        }).then(function() {
+            location.reload();
+        });
     }
 </script>
 {%endblock%}

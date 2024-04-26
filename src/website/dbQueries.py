@@ -24,6 +24,15 @@ def deleteSession(id):
     db.session.commit()
     return
     
+def deletePost(id):
+    Post.query.filter(Post.id == id).delete(synchronize_session=False)
+    db.session.commit()
+    return
+
+def deleteEvent(id):
+    Events.query.filter(Events.id == id).delete(synchronize_session=False)
+    db.session.commit()
+    return
 
 def getMaxSessionID():
     max_session = Session.query.order_by(Session.session_ID.desc()).first()
