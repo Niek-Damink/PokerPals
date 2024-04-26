@@ -247,7 +247,7 @@ def adminAddPost():
     elif len(text) == 0:
         flash("Pleas enter some text", "error")
         return redirect(url_for("admin.adminPostEvents"))
-    date = datetime.datetime.today().strftime('%m/%d/%Y')
+    date = datetime.datetime.today().strftime('%d/%m/%Y')
     print(date)
     id = getMaxPostID()
     if(allowed_file(file.filename)):

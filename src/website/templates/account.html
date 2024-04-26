@@ -109,7 +109,7 @@
                             {%for session in session_list%}
                             <tr>
                                 <th scope="row">{{session.number}}</th>
-                                <td>{{session.date | round(2)}}</td>
+                                <td>{{session.date}}</td>
                                 <td>{{session.begin_stack | round(2)}}</td>
                                 <td>{{session.added_chips | round(2)}}</td>
                                 <td>{{session.end_stack | round(2)}}</td>

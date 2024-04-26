@@ -1,6 +1,7 @@
 from .models import User, Session, User_Session, Post, Events
 from . import db
-from sqlalchemy import func
+from sqlalchemy import func, cast, Integer
+import datetime
 
 def getUserAndImage():
     users = User.query.all()
@@ -219,14 +220,19 @@ def getPosts():
     return all_posts
             
 def getEvents():
-    all_events = Events.query.order_by(func.substr(Events.date, 7, 10).desc(), func.substr(Events.date, 4, 5).desc(), func.substr(Events.date, 1, 2).desc()).all()
-    print(all_events)
+    year = datetime.datetime.today().strftime('%Y')
+    month = datetime.datetime.today().strftime('%m')
+    day = datetime.datetime.today().strftime('%d')
+    all_events = Events.query.filter((cast(func.substr(Events.date, 7, 10),Integer) > year) |
+                                      ((cast(func.substr(Events.date, 4, 5), Integer) > month) & (cast(func.substr(Events.date, 7, 10) == year, Integer))) | 
+                                      ((cast(func.substr(Events.date, 1, 2), Integer) >= day) & (cast(func.substr(Events.date, 4, 5), Integer) == month) & (cast(func.substr(Events.date, 7, 10), Integer) == year))).order_by(cast(func.substr(Events.date, 7, 10),Integer).asc(), cast(func.substr(Events.date, 4, 5),Integer).asc(), cast(func.substr(Events.date, 1, 2),Integer).asc()).all()
+
     return all_events
 
 def getSessionsForPerson(name):
     all_sessions = User_Session.query.filter(User_Session.person_name == name).order_by(User_Session.session_ID.desc()).all()
-    all_all_sessions = Session.query.order_by(func.substr(Session.date, 7, 10).desc(), func.substr(Session.date, 4, 5).desc(), func.substr(Session.date, 1, 2).desc()).all()
-    sessionDict = {}  #WORNFNFNFNFNFNDSS
+    all_all_sessions = Session.query.order_by(cast(func.substr(Session.date, 7, 10),Integer).desc(), cast(func.substr(Session.date, 4, 5),Integer).desc(), cast(func.substr(Session.date, 1, 2),Integer).desc()).all()
+    sessionDict = {}
     for i, session in enumerate(all_all_sessions):
         sessionDict[session.session_ID] = len(all_all_sessions) - i
     for session in all_sessions:
