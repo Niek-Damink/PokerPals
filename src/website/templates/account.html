@@ -66,7 +66,7 @@
                                 </tr>
                                 <tr>
                                     <td>Average Profit</td>
-                                    <td name="negative">{{account["average_profit"] | round(2)}}</td>
+                                    <td name="doColor">{{account["average_profit"] | round(2)}}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -88,7 +88,7 @@
                                 </tr>
                                 <tr>
                                     <td>Profit Per Hour</td>
-                                    <td name="negative">{{account["profit_hour"] | round(2)}}</td>
+                                    <td name="doColor">{{account["profit_hour"] | round(2)}}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -118,7 +118,7 @@
                                 <td>{{session.begin_stack | round(2)}}</td>
                                 <td>{{session.added_chips | round(2)}}</td>
                                 <td>{{session.end_stack | round(2)}}</td>
-                                <td name="negative">{{(session.end_stack - session.added_chips - session.begin_stack) |
+                                <td name="doColor">{{(session.end_stack - session.added_chips - session.begin_stack) |
                                     round(2)}}</td>
                                 <td><a href="/sessions/{{session.session_ID}}">Session</a></td>
                             </tr>
@@ -141,34 +141,6 @@
 {% endblock %}
 
 {%block js%}
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        MakeNegative()
-    });
-
-    function MakeNegative() {
-        TDs = document.getElementsByName('negative');
-        for (i = 0; i < TDs.length; i++) {
-            temp = TDs[i];
-            if (temp.firstChild.nodeValue.indexOf('-') == 0) {
-                temp.className = "text-danger";
-            }
-            else {
-                temp.className = "text-success";
-            }
-        }
-        TD = document.getElementById('fneg')
-        if (TD.firstChild.nodeValue.indexOf('€-') == 0) {
-            TD.className = "font-weight-bold mb-0 d-block text-danger";
-            document.getElementById("profit").innerText = "Loss"
-        }
-        else {
-            TD.className = "font-weight-bold mb-0 d-block text-success";
-        }
-    }
-
-</script>
-
 <script>
     const xArray = JSON.parse("{{x_list}}");
     const yArray = JSON.parse("{{y_list}}");

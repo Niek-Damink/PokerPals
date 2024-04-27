@@ -20,7 +20,7 @@
                         <td>{{user.begin_stack | round(2)}}</td>
                         <td>{{user.added_chips | round(2)}}</td>
                         <td>{{user.end_stack | round(2)}}</td>
-                        <td name="total">{{(user.end_stack - user.begin_stack - user.added_chips) | round(2)}}</td>
+                        <td name="doColor">{{(user.end_stack - user.begin_stack - user.added_chips) | round(2)}}</td>
                     </tr>
                     {%endfor%}
                 </tbody>
@@ -84,25 +84,4 @@
         </div>
     </div>
 </div>
-{% endblock %}
-
-{%block js%}
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        MakeNegative()
-    });
-
-    function MakeNegative() {
-        TDs = document.getElementsByName('total');
-        for (i = 0; i < TDs.length; i++) {
-            temp = TDs[i];
-            if (temp.firstChild.nodeValue.indexOf('-') == 0) {
-                temp.className = "text-danger";
-            }
-            else {
-                temp.className = "text-success";
-            }
-        }
-    }
-</script>
 {% endblock %}

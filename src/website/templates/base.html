@@ -47,11 +47,6 @@
             </a>
       </div>
     </div>
-    </a>
-    </li>
-    </ul>
-    </div>
-    </div>
   </nav>
   {% endif %}
 
@@ -81,22 +76,46 @@
     {% block content%}
     {% endblock %}
   </div>
-
-  {%block js%}
-  {%endblock%}
-
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-    crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-    crossorigin="anonymous"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-    crossorigin="anonymous"></script>
-
-
 </body>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    MakeNegative()
+});
+
+function MakeNegative() {
+    TDs = document.getElementsByName('doColor');
+    for (i = 0; i < TDs.length; i++) {
+        temp = TDs[i];
+        if (temp.firstChild.nodeValue.indexOf('-') == 0) {
+            temp.className = "text-danger";
+        }
+        else {
+            temp.className = "text-success";
+        }
+    }
+    TD = document.getElementById('fneg')
+    if (TD.firstChild.nodeValue.indexOf('€-') == 0) {
+        TD.className = "font-weight-bold mb-0 d-block text-danger";
+        document.getElementById("profit").innerText = "Loss"
+    }
+    else {
+        TD.className = "font-weight-bold mb-0 d-block text-success";
+    }
+}
+</script>
+
+{%block js%}
+{%endblock%}
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+  integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+  crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+  integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+  crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+  integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+  crossorigin="anonymous"></script>
 
 </html>
 

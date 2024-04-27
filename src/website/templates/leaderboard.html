@@ -34,10 +34,10 @@
       <tr>
         <td>{{person[0]}}</td>
         <td>{{person[1]}}</td>
-        <td name="number">{{person[2] | round(2)}}</td>
-        <td name="number">{{person[3] | round(2)}}</td>
+        <td name="doColor">{{person[2] | round(2)}}</td>
+        <td name="doColor">{{person[3] | round(2)}}</td>
         <td>{{person[4]}}</td>
-        <td name="number">{{person[5] | round(2)}}</td>
+        <td name="doColor">{{person[5] | round(2)}}</td>
       </tr>
       {%endfor%}
     </tbody>
@@ -48,7 +48,6 @@
 {%block js%}
 <script>
   document.addEventListener("DOMContentLoaded", function () {
-    MakeNegative()
     loadDocument()
   });
 
@@ -58,18 +57,6 @@
 
   }
 
-  function MakeNegative() {
-    TDs = document.getElementsByName('number');
-    for (i = 0; i < TDs.length; i++) {
-      temp = TDs[i];
-      if (temp.firstChild.nodeValue.indexOf('-') == 0) {
-        temp.className = "text-danger";
-      }
-      else {
-        temp.className = "text-success";
-      }
-    }
-  }
 
   function saveChoice(element) {
     window.sessionStorage.setItem("choice", element.selectedIndex)
