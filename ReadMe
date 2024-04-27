@@ -1,0 +1,14 @@
+# Pokerpals Website
+Poker Pals is a dynamic web platform designed for our poker group, offering a way for tracking poker sessions, player statistics, and upcoming events. Moreover, it contains user accounts for each member, showcasing individual performance metrics, alongside a leaderboard for friendly competition.
+
+## Installation
+```bash
+pip install -r requirements.txt
+```
+
+## Usage
+When you want to start up the website, simply run main.py.
+When using the webpage with the given database, admin login is: username: Admin, password: Admin123!
+
+## Creator
+Niek Damink
