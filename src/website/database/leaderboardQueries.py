@@ -2,6 +2,9 @@ from .models import User, User_Session, Session
 from .. import db
 from sqlalchemy import func
 
+#returns a list of lists containing attributes for a leaderboard
+#does this for all the users that have played a minimum of three sessions
+#of form: [[i, username, average_session_result, average_hour_result, session_amount, total_session_result]]
 def getLeaderboard():
     leaderboard = []
     users = User.query.all()
@@ -26,6 +29,10 @@ def getLeaderboard():
         person[0] = i
     return leaderboard
 
+
+#returns a list of lists containing attributes for a leaderboard
+#does this for all the users that have played a minimum of three sessions in the specified year
+#of form: [[i, username, average_session_result, average_hour_result, session_amount, total_session_result]]
 def getLeaderboardPerYear(year):
     leaderboard = []
     users = User.query.all()
@@ -52,6 +59,7 @@ def getLeaderboardPerYear(year):
         person[0] = i
     return leaderboard
 
+#returns all the distinct years where sessions have been played
 def getAllDates():
     distinct_years = db.session.query(func.substr(Session.date, -4)).distinct().all()
     return distinct_years

@@ -4,6 +4,7 @@ from werkzeug.security import generate_password_hash
 from os.path import join, dirname, realpath
 import os
 
+#returns a list of users containing a name, url for the avatar and the amount of sessions
 def getUserAndImage():
     users = User.query.all()
     user_list = []
@@ -14,15 +15,18 @@ def getUserAndImage():
             user_list.sort(key=lambda x: x[2], reverse=True)
     return user_list
 
+#deletes a username with name = name
 def deleteUserName(name):
     User.query.filter(User.name == name).delete(synchronize_session=False)
     db.session.commit()
 
+#edits a user's name (user.name = oldname) to newName
 def editUser(oldName, newName):
     User.query.filter(User.name == oldName).update({User.name: newName}, synchronize_session=False)
     User_Session.query.filter(User_Session.person_name == oldName).update({User_Session.person_name: newName}, synchronize_session=False)
     db.session.commit()
 
+#updates the picture of user with name = name to the new file
 def editPicture(name, file):
     this_user = getUser(name)
     fileName = "avatar" + str(this_user.id) + "." + file.filename.rsplit('.', 1)[1]
@@ -31,15 +35,18 @@ def editPicture(name, file):
     User.query.filter(User.name == name).update({User.imgURL: 'pictures/' + fileName}, synchronize_session=False)
     db.session.commit()
 
+#adds a user to the database
 def addUser(name, password):
     new_user= User(name = name, password = generate_password_hash(password), imgURL = "/pictures/account.png")
     db.session.add(new_user)
     db.session.commit()
 
+#returns a user with the specified name
 def getUser(name):
     user = User.query.filter_by(name=name).first()
     return user
 
+#returns a dictionary containing all information for user with name = name
 def get_account_information(name):
     user = User.query.filter(User.name == name).first()
     user_sessions = User_Session.query.filter(User_Session.person_name == name)

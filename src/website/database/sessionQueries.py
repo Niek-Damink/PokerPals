@@ -2,12 +2,14 @@ from .models import Session, User_Session
 from .. import db
 from sqlalchemy import func, cast, Integer
 
+#deletes a session from the database
 def deleteSession(id):
     User_Session.query.filter(User_Session.session_ID == id).delete(synchronize_session=False)
     Session.query.filter(Session.session_ID == id).delete(synchronize_session=False)
     db.session.commit()
     return
 
+#returns the biggest session id + 1 that is in the database
 def getMaxSessionID():
     max_session = Session.query.order_by(Session.session_ID.desc()).first()
     if max_session == None:
@@ -16,10 +18,14 @@ def getMaxSessionID():
         max_session_id = max_session.session_ID + 1
     return max_session_id
 
+#returns the amount of sessions a user has in the database
 def getSessionAmountForUser(name):
     amount = User_Session.query.filter(User_Session.person_name == name).count()
     return amount
 
+#returns a list of sessions with the amount of people and the total pot
+#filter on a value: 1 - host, 2 - month, 3- year, other - all
+#order: 0 - date, 1 - duration, 2 - potsize, 3 - player amount
 def getSessionsWithPeopleAndPot(filter, value, order):
     if filter == "1" and value != "":
         sessions = Session.query.filter(Session.host == value).order_by(func.substr(Session.date, 7, 10).desc(), func.substr(Session.date, 4, 5).desc(), func.substr(Session.date, 1, 2).desc()).all()
@@ -51,10 +57,13 @@ def getSessionsWithPeopleAndPot(filter, value, order):
         sessions.sort(key=lambda x: x.players, reverse=True)
     return sessions
 
+#updates a session with id = id to the specified host, date, duration, small blind, big blind, straddle and seven_deuce
 def updateSession(id, host, date, duration, small_blind, big_blind, is_straddle, is_seven_deuce):
     Session.query.filter(Session.session_ID == id).update({Session.host:host, Session.session_ID:id, Session.date:date, Session.duration:duration, Session.small_blind: small_blind, Session.big_blind: big_blind, Session.straddle: is_straddle, Session.seven_deuce: is_seven_deuce}, synchronize_session=False)
     db.session.commit()
 
+#returns a dictionary containing the total statistics of some amount of sessions
+#filter on a value: 1 - host, 2 - month, 3- year, other - all
 def getTotalStatistics(filter, value):
     if filter == "1" and value != "":
         sessions = Session.query.filter(Session.host == value).all()
@@ -92,6 +101,7 @@ def getTotalStatistics(filter, value):
         total_statistics_dict["Average chips"] = 0
     return total_statistics_dict
 
+#adds a session to the database + adds all corresponding user_sessions to the database
 def addSession(host, date, duration, small_blind, big_blind, is_straddle, is_seven_deuce, person_session):
     session_ID = getMaxSessionID()
     new_session = Session(host=host, session_ID = session_ID, date=date, duration = duration, small_blind = small_blind, big_blind = big_blind, straddle = is_straddle, seven_deuce = is_seven_deuce)
@@ -101,18 +111,12 @@ def addSession(host, date, duration, small_blind, big_blind, is_straddle, is_sev
         db.session.add(new_person_session)
     db.session.commit()
  
+#returns all user_sessions corresponding to the session with id = id
 def getSessionInformation(id):
     user_sessions = User_Session.query.filter(User_Session.session_ID == id)
-    enters = {}
-    i = 0
-    for user in user_sessions:
-        if i%2 == 0 and i != 0:
-            enters[user.person_name] = True
-        else:
-            enters[user.person_name] = False
-        i += 1
-    return user_sessions, enters
+    return user_sessions
 
+#returns the information for a single session with id = id
 def getSingleSession(id):
     session = Session.query.filter(Session.session_ID == id).first()
     total = 0
@@ -122,32 +126,37 @@ def getSingleSession(id):
             total += userSession.end_stack
     session.players = players
     session.pot = total
-    all_sessions = Session.query.order_by(func.substr(Session.date, 7, 10).desc(), func.substr(Session.date, 4, 5).desc(), func.substr(Session.date, 1, 2).desc()).all()
-    sessionNum = {}
-    for i, the_session in enumerate(all_sessions):
-        sessionNum[the_session.session_ID] = len(all_sessions)-i
-    session.number = sessionNum[session.session_ID]
+    sessionDict = getSessionDict()
+    session.number = sessionDict[session.session_ID]
     return session
 
+#returns all the sessions for a certain user with name = name
 def getSessionsForPerson(name):
     all_sessions = User_Session.query.filter(User_Session.person_name == name).order_by(User_Session.session_ID.desc()).all()
-    all_all_sessions = Session.query.order_by(cast(func.substr(Session.date, 7, 10),Integer).desc(), cast(func.substr(Session.date, 4, 5),Integer).desc(), cast(func.substr(Session.date, 1, 2),Integer).desc()).all()
-    sessionDict = {}
-    for i, session in enumerate(all_all_sessions):
-        sessionDict[session.session_ID] = len(all_all_sessions) - i
+    sessionDict = getSessionDict()
     for session in all_sessions:
         session.date = Session.query.filter(Session.session_ID == session.session_ID).first().date
         session.number = sessionDict[session.session_ID]
 
     return all_sessions
 
+#returns graph information for all sessions for a certain user
+#X = [session number], Y = [total amount after session X]
 def getXYforPerson(name):
     all_sessions = User_Session.query.filter(User_Session.person_name == name).order_by(User_Session.session_ID.asc()).all()
-    x = []
-    y = []
-    total = 0
+    x = []; y = []; total = 0; 
+    sessionDict = getSessionDict()
     for session in all_sessions:
-        x.append(session.session_ID)
+        x.append(sessionDict[session.session_ID])
         total += round(session.end_stack - session.begin_stack - session.added_chips, 2)
         y.append(total)
     return x, y
+
+#returns a dictionary that maps the session_id to a session number
+#session number is in chronological order
+def getSessionDict():
+    sessions = Session.query.order_by(cast(func.substr(Session.date, 7, 10),Integer).desc(), cast(func.substr(Session.date, 4, 5),Integer).desc(), cast(func.substr(Session.date, 1, 2),Integer).desc()).all()
+    sessionDict = {}
+    for i, session in enumerate(sessions):
+        sessionDict[session.session_ID] = len(sessions) - i
+    return sessionDict

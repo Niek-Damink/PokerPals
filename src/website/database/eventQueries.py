@@ -3,17 +3,18 @@ from .. import db
 import datetime
 from sqlalchemy import func, cast, Integer
 
+#deletes event with id = id
 def deleteEvent(id):
     Events.query.filter(Events.id == id).delete(synchronize_session=False)
     db.session.commit()
     return
 
-
-
+#gets all events
 def getEventsAdmin():
     all_events = Events.query.all()
     return all_events
    
+#gets all events after/equal to the current date
 def getEvents():
     year = datetime.datetime.today().strftime('%Y'); month = datetime.datetime.today().strftime('%m'); day = datetime.datetime.today().strftime('%d')
     today = datetime.datetime.today()
@@ -30,10 +31,12 @@ def getEvents():
             event.date = "Tomorrow"
     return all_events
 
+#updates an event with the given name and date
 def updateEvent(id, name, date):
     Events.query.filter(Events.id == id).update({Events.name: name, Events.date:date})
     db.session.commit()
 
+#adds a new event to the database
 def addEvent(date, name):
     new_event = Events(date = date, name = name)
     db.session.add(new_event)

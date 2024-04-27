@@ -38,8 +38,8 @@ def sessions():
 @views.route('/sessions/<id>')
 @login_required
 def sessionOverview(id):
-    session_information, enters = sessionQueries.getSessionInformation(id)
-    return render_template("sessionOverview.html", user = current_user, session_information = session_information, enters = enters, session = sessionQueries.getSingleSession(id))
+    session_information = sessionQueries.getSessionInformation(id)
+    return render_template("sessionOverview.html", user = current_user, session_information = session_information, session = sessionQueries.getSingleSession(id))
 
 
 @views.route('/leaderboard', methods=['GET', 'POST'])
