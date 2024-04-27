@@ -1,8 +1,7 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
-from .models import User
-from werkzeug.security import generate_password_hash, check_password_hash
-from . import db
+from werkzeug.security import check_password_hash
 from flask_login import login_user, login_required, logout_user, current_user
+from .database import userQueries
 
 
 auth = Blueprint('auth', __name__)
@@ -14,7 +13,7 @@ def login():
         name = request.form.get('name')
         password = request.form.get('password')
 
-        user = User.query.filter_by(name=name).first()
+        user = userQueries.getUser(name)
         if user:
             if check_password_hash(user.password, password):
                 login_user(user, remember=True)

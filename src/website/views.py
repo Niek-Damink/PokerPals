@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request
 from flask_login import login_user, login_required, logout_user, current_user
-from .dbQueries import *
+from .database import userQueries, eventQueries, postQueries, sessionQueries, leaderboardQueries
 
 views = Blueprint('views', __name__)
 
@@ -8,19 +8,19 @@ views = Blueprint('views', __name__)
 @views.route('/')
 @login_required
 def home():
-    return render_template("home.html", user = current_user, user_list = getUserAndImage(), post_list = getPosts(), event_list = getEvents())
+    return render_template("home.html", user = current_user, user_list = userQueries.getUserAndImage(), post_list = postQueries.getPosts(), event_list = eventQueries.getEvents())
 
 @views.route('/account')
 @login_required
 def account():
-    x, y = getXYforPerson(current_user.name)
-    return render_template("account.html", user = current_user, account = get_account_information(current_user.name),  session_list = getSessionsForPerson(current_user.name), x_list = x, y_list = y)
+    x, y = sessionQueries.getXYforPerson(current_user.name)
+    return render_template("account.html", user = current_user, account = userQueries.get_account_information(current_user.name),  session_list = sessionQueries.getSessionsForPerson(current_user.name), x_list = x, y_list = y)
 
 @views.route('/account/<name>')
 @login_required
 def accountID(name):
-    x, y = getXYforPerson(name)
-    return render_template("account.html", user = current_user, account = get_account_information(name), session_list = getSessionsForPerson(name), x_list = x, y_list = y)
+    x, y = sessionQueries.getXYforPerson(name)
+    return render_template("account.html", user = current_user, account = userQueries.get_account_information(name), session_list = sessionQueries.getSessionsForPerson(name), x_list = x, y_list = y)
 
 @views.route('/sessions', methods=['GET', 'POST'])
 @login_required
@@ -33,13 +33,13 @@ def sessions():
         filterOn = "0"
         filterValue = None
         orderOn = "0"
-    return render_template("sessions.html", user = current_user, session_list = getSessionsWithPeopleAndPot(filterOn, filterValue, orderOn), total_statistics = getTotalStatistics(filterOn, filterValue))
+    return render_template("sessions.html", user = current_user, session_list = sessionQueries.getSessionsWithPeopleAndPot(filterOn, filterValue, orderOn), total_statistics = sessionQueries.getTotalStatistics(filterOn, filterValue))
 
 @views.route('/sessions/<id>')
 @login_required
 def sessionOverview(id):
-    session_information, enters = getSessionInformation(id)
-    return render_template("sessionOverview.html", user = current_user, session_information = session_information, enters = enters, session = getSingleSession(id))
+    session_information, enters = sessionQueries.getSessionInformation(id)
+    return render_template("sessionOverview.html", user = current_user, session_information = session_information, enters = enters, session = sessionQueries.getSingleSession(id))
 
 
 @views.route('/leaderboard', methods=['GET', 'POST'])
@@ -47,11 +47,11 @@ def sessionOverview(id):
 def leaderboard():
     year = request.form.get("year")
     if request.method == "POST" and year != "all":
-        leaderboard = getLeaderboardPerYear(year)
+        leaderboard = leaderboardQueries.getLeaderboardPerYear(year)
         year = "Poker Pal's " + year + " Leaderboard!" 
     else:
-        leaderboard = getLeaderboard()
+        leaderboard = leaderboardQueries.getLeaderboard()
         year = "Poker Pal's All-Time Leaderboard!"
-    return render_template("leaderboard.html", user = current_user, leaderboard = leaderboard, dates = getAllDates(), year=year)
+    return render_template("leaderboard.html", user = current_user, leaderboard = leaderboard, dates = leaderboardQueries.getAllDates(), year=year)
 
 

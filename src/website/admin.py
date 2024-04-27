@@ -1,13 +1,9 @@
-from flask import Blueprint, render_template, request, flash, redirect, url_for, session
-from .models import User, Session, User_Session, Post, Events
-from werkzeug.security import generate_password_hash, check_password_hash
-from flask_login import login_user, login_required, logout_user, current_user
-from . import db
-from .dbQueries import *
+from flask import Blueprint, render_template, request, flash, redirect, url_for
+from flask_login import login_required, current_user
+from .database import userQueries, eventQueries, postQueries, sessionQueries
 from os.path import join, dirname, realpath
 import os
 import datetime
-import time
 
 admin = Blueprint('admin', __name__)
 ALLOWED_EXTENSIONS = {'png', 'jpg'}
@@ -22,8 +18,7 @@ def adminUsers():
         name = request.form.get('name')
         password1 = request.form.get('password1')
         password2 = request.form.get('password2')
-
-        user = User.query.filter_by(name=name).first()
+        user = userQueries.getUser(name)
         if user:
             flash('name already exists', category='error')
         elif len(name) < 1:
@@ -33,12 +28,10 @@ def adminUsers():
         elif password1 != password2:
             flash('Passwords are not the same', category='error')
         else:
-            new_user = User(name = name, password = generate_password_hash(password1), imgURL = "/pictures/account.png")
-            db.session.add(new_user)
-            db.session.commit()
+            userQueries.addUser(name, password1)
             flash('Succesfully created account for ' + name, category='success')
             return redirect(url_for('admin.adminUsers'))
-    return render_template("admin/adminUsers.html", user = current_user, user_list = getUserAndImage()) 
+    return render_template("admin/adminUsers.html", user = current_user, user_list = userQueries.getUserAndImage()) 
 
 
 @admin.route('/users/delete/<name>', methods=['DELETE'])
@@ -46,11 +39,11 @@ def adminUsers():
 def deleteUser(name):
     if current_user.name != "Admin":
         return "Fail"
-    user = User.query.filter_by(name=name).first()
+    user = userQueries.getUser(name)
     path = user.imgURL
-    sessions = User_Session.query.filter(User_Session.person_name == user.name).count()
+    sessions = sessionQueries.getSessionAmountForUser(user.name)
     if sessions == 0:
-        deleteUserName(name)
+        userQueries.deleteUserName(name)
         if path != "/pictures/account.png":
             UPLOADS_PATH = join(dirname(realpath(__file__)), 'static/' + path)
             os.remove(UPLOADS_PATH)
@@ -66,24 +59,16 @@ def editUser(name):
     if current_user.name != "Admin":
         return redirect(url_for('auth.login'))
     editName = request.form.get('editName')
-    user = User.query.filter_by(name=editName).first()
+    user = userQueries.getUser(editName)
     if name == editName or len(editName) < 1:
         pass
     elif user:
         flash("This username is already in use", category="error")
     else:
-        User.query.filter(User.name == name).update({User.name: editName}, synchronize_session=False)
-        User_Session.query.filter(User_Session.person_name == name).update({User_Session.person_name: editName}, synchronize_session=False)
-        db.session.commit()
-
+        userQueries.editUser(name, editName)
     file = request.files['file']
     if(allowed_file(file.filename)):
-        this_user = User.query.filter_by(name=editName).first()
-        fileName = "avatar" + str(this_user.id) + "." + file.filename.rsplit('.', 1)[1]
-        UPLOADS_PATH = join(dirname(realpath(__file__)), 'static/pictures/' + fileName)
-        file.save(UPLOADS_PATH)
-        User.query.filter(User.name == name).update({User.imgURL: 'pictures/' + fileName}, synchronize_session=False)
-        db.session.commit()
+        userQueries.editPicture(editName, file)
     elif len(file.filename) > 0:
         flash("File is not allowed, allowed formats are png and jpg", "error")
     return redirect(url_for('admin.adminUsers'))
@@ -99,7 +84,7 @@ def adminSessions():
         filterOn = "0"
         filterValue = None
         orderOn = "0"
-    return render_template("admin/adminSessionOverview.html", user = current_user, session_list = getSessionsWithPeopleAndPot(filterOn, filterValue, orderOn))
+    return render_template("admin/adminSessionOverview.html", user = current_user, session_list = sessionQueries.getSessionsWithPeopleAndPot(filterOn, filterValue, orderOn))
 
 @admin.route('/sessions/editSession/<id>', methods=['POST'])
 @login_required
@@ -107,29 +92,28 @@ def adminEditSession(id):
     if current_user.name != "Admin":
         return redirect(url_for('auth.login'))
     host = request.form.get('host')
-    the_date = request.form.get('date'); date = the_date.split("/")
-    the_duration = request.form.get('duration'); duration = the_duration.split(".")
-    the_small_blind = request.form.get('smallblind'); small_blind = the_small_blind.split(".")
-    the_big_blind = request.form.get('bigblind'); big_blind = the_big_blind.split(".")
+    date = request.form.get('date'); date_split = date.split("/")
+    duration = request.form.get('duration'); duration_split = duration.split(".")
+    small_blind = request.form.get('smallblind'); small_blind_split = small_blind.split(".")
+    big_blind = request.form.get('bigblind'); big_blind_split = big_blind.split(".")
     is_straddle = request.form.get('straddle') != None
     is_seven_deuce = request.form.get('sevendeuce') != None
-    if not User.query.filter_by(name=host).first():
+    if not userQueries.getUser(host):
         flash("the host '" + host +"' does not exist", "error")
         return redirect(url_for('admin.adminSessions'))
-    elif len(date) != 3 or not date[0].isdigit() or not date[1].isdigit() or not date[2].isdigit() or len(date[0]) != 2 or len(date[1]) != 2 or len(date[2]) != 4:
+    elif len(date_split) != 3 or not date_split[0].isdigit() or not date_split[1].isdigit() or not date_split[2].isdigit() or len(date_split[0]) != 2 or len(date_split[1]) != 2 or len(date_split[2]) != 4:
         flash("Please fill in a correct date (DD/MM/YYYY)", "error")
         return redirect(url_for('admin.adminSessions'))
-    elif len(duration) > 2 or not duration[0].isdigit() or (len(duration) == 2 and not duration[1].isdigit()):
+    elif len(duration_split) > 2 or not duration_split[0].isdigit() or (len(duration_split) == 2 and not duration_split[1].isdigit()):
         flash("Please fill in a correct duration", "error")
         return redirect(url_for('admin.adminSessions'))
-    elif len(small_blind) > 2 or not small_blind[0].isdigit() or (len(small_blind) == 2 and not small_blind[1].isdigit()):
+    elif len(small_blind_split) > 2 or not small_blind_split[0].isdigit() or (len(small_blind_split) == 2 and not small_blind_split[1].isdigit()):
         flash("Please fill in a correct small blind", "error")
         return redirect(url_for('admin.adminSessions'))
-    elif len(big_blind) > 2 or not big_blind[0].isdigit() or (len(big_blind) == 2 and not big_blind[1].isdigit()):
+    elif len(big_blind_split) > 2 or not big_blind[0].isdigit() or (len(big_blind_split) == 2 and not big_blind_split[1].isdigit()):
         flash("Please fill in a correct big blind", "error")
         return redirect(url_for('admin.adminSessions'))
-    Session.query.filter(Session.session_ID == id).update({Session.host:host, Session.session_ID:id, Session.date:the_date, Session.duration:the_duration, Session.small_blind: the_small_blind, Session.big_blind: the_big_blind, Session.straddle: is_straddle, Session.seven_deuce: is_seven_deuce}, synchronize_session=False)
-    db.session.commit()
+    sessionQueries.updateSession(id, host, date, duration , small_blind, big_blind, is_straddle, is_seven_deuce)
     flash("Succesfully edited session " + id, "success")
     return redirect(url_for('admin.adminSessions'))
     
@@ -140,7 +124,7 @@ def adminDeleteSession(id):
     if current_user.name != "Admin":
         return "Fail"
     flash("Successfully deleted session", "success")
-    deleteSession(id)
+    sessionQueries.deleteSession(id)
     return redirect(url_for("admin.adminSessions"))
 
 
@@ -163,38 +147,35 @@ def adminAddSession(amount):
     if current_user.name != "Admin":
         return redirect(url_for('auth.login'))
     host = request.form.get('host')
-    the_date = request.form.get('date'); date = the_date.split("/")
-    the_duration = request.form.get('duration'); duration = the_duration.split(".")
-    the_small_blind = request.form.get('smallblind'); small_blind = the_small_blind.split(".")
-    the_big_blind = request.form.get('bigblind'); big_blind = the_big_blind.split(".")
+    date = request.form.get('date'); date_split = date.split("/")
+    duration = request.form.get('duration'); duration_split = duration.split(".")
+    small_blind = request.form.get('smallblind'); small_blind_split = small_blind.split(".")
+    big_blind = request.form.get('bigblind'); big_blind_split = big_blind.split(".")
     is_straddle = request.form.get('straddle') != None
     is_seven_deuce = request.form.get('sevendeuce') != None
-    if not User.query.filter_by(name=host).first():
+    if not userQueries.getUser(host):
         flash("the host '" + host +"' does not exist", "error")
         return redirect(url_for('admin.adminAddSessions'))
-    elif len(date) != 3 or not date[0].isdigit() or not date[1].isdigit() or not date[2].isdigit() or len(date[0]) != 2 or len(date[1]) != 2 or len(date[2]) != 4:
+    elif len(date_split) != 3 or not date_split[0].isdigit() or not date_split[1].isdigit() or not date_split[2].isdigit() or len(date_split[0]) != 2 or len(date_split[1]) != 2 or len(date_split[2]) != 4:
         flash("Please fill in a correct date (DD/MM/YYYY)", "error")
         return redirect(url_for('admin.adminAddSessions'))
-    elif len(duration) > 2 or not duration[0].isdigit() or (len(duration) == 2 and not duration[1].isdigit()):
+    elif len(duration_split) > 2 or not duration_split[0].isdigit() or (len(duration_split) == 2 and not duration_split[1].isdigit()):
         flash("Please fill in a correct duration", "error")
         return redirect(url_for('admin.adminAddSessions'))
-    elif len(small_blind) > 2 or not small_blind[0].isdigit() or (len(small_blind) == 2 and not small_blind[1].isdigit()):
+    elif len(small_blind_split) > 2 or not small_blind_split[0].isdigit() or (len(small_blind_split) == 2 and not small_blind_split[1].isdigit()):
         flash("Please fill in a correct small blind", "error")
         return redirect(url_for('admin.adminAddSessions'))
-    elif len(big_blind) > 2 or not big_blind[0].isdigit() or (len(big_blind) == 2 and not big_blind[1].isdigit()):
+    elif len(big_blind_split) > 2 or not big_blind_split[0].isdigit() or (len(big_blind_split) == 2 and not big_blind_split[1].isdigit()):
         flash("Please fill in a correct big blind", "error")
         return redirect(url_for('admin.adminAddSessions'))
-    person_session = []
-    used_names = []
-    total_in = 0
-    total_out = 0
+    person_session = [];used_names = []; total_in = 0; total_out = 0
     for id in range(1, int(amount) + 1):
         id = str(id)
         name = request.form.get('name' + id)
         begin_stack = request.form.get('begin' + id)
         added_stack = request.form.get('added' + id)
         end_stack = request.form.get('end' + id)
-        if (not User.query.filter_by(name=name).first()):
+        if (not userQueries.getUser(name)):
             flash("the name '" + name +"' does not exist", "error")
         elif (name in used_names):
             flash("the name '" + name +"' has been used twice", "error")
@@ -215,13 +196,7 @@ def adminAddSession(amount):
         flash("The total amount of money going in and out is not equal", "error")
         return redirect(url_for('admin.adminAddSessions'))
     global do_reset; do_reset = True
-    session_ID = getMaxSessionID()
-    new_session = Session(host=host, session_ID = session_ID, date=the_date, duration = the_duration, small_blind = the_small_blind, big_blind = the_big_blind, straddle = is_straddle, seven_deuce = is_seven_deuce)
-    db.session.add(new_session)
-    for person in person_session:
-        new_person_session = User_Session(session_ID = session_ID, begin_stack = person[1], added_chips = person[2], end_stack = person[3], person_name = person[0])
-        db.session.add(new_person_session)
-    db.session.commit()
+    sessionQueries.addSession(host, date, duration, small_blind, big_blind, is_straddle, is_seven_deuce, person_session)
     flash("Succesfully added the new session", "success")
     return redirect(url_for('admin.adminSessions'))
     
@@ -231,7 +206,7 @@ def adminAddSession(amount):
 def adminPostEvents():
     if current_user.name != "Admin":
         return redirect(url_for('auth.login'))
-    return render_template("admin/adminPostEventsOverview.html", user = current_user, post_list = getPosts(), event_list = getEventsAdmin())
+    return render_template("admin/adminPostEventsOverview.html", user = current_user, post_list = postQueries.getPosts(), event_list = eventQueries.getEventsAdmin())
 
 @admin.route('/post-events/delete-post/<id>', methods=['DELETE'])
 @login_required
@@ -239,7 +214,7 @@ def adminPostEventsDeletePost(id):
     if current_user.name != "Admin":
         return redirect(url_for('auth.login'))
     flash("Successfully deleted post", "success")
-    deletePost(id)
+    postQueries.deletePost(id)
     return redirect(url_for("admin.adminAddPostEvents"))
 
 @admin.route('/post-events/delete-event/<id>', methods=['DELETE'])
@@ -248,7 +223,7 @@ def adminPostEventsDeleteEvent(id):
     if current_user.name != "Admin":
         return redirect(url_for('auth.login'))
     flash("Successfully deleted event", "success")
-    deleteEvent(id)
+    eventQueries.deleteEvent(id)
     return redirect(url_for("admin.adminAddPostEvents"))
 
 
@@ -275,22 +250,15 @@ def adminAddPost():
         return redirect(url_for("admin.adminAddPostEvents"))
     date = datetime.datetime.today().strftime('%d/%m/%Y')
     print(date)
-    id = getMaxPostID()
+    id = postQueries.getMaxPostID()
     if(allowed_file(file.filename)):
-        fileName = "post" + str(id) + "." + file.filename.rsplit('.', 1)[1]
-        UPLOADS_PATH = join(dirname(realpath(__file__)), 'static/pictures/' + fileName)
-        file.save(UPLOADS_PATH)
-        new_post = Post(id=id, imgURL="pictures/" + fileName, title = title, text = text, date = date)
-        db.session.add(new_post)
-        db.session.commit()
+        postQueries.addPostWithPicture(id, title, text, date, file)
         flash("Succesfully created post with picture")
     elif len(file.filename) > 0:
         flash("File is not allowed, allowed formats are png and jpg", "error")  
         return redirect(url_for("admin.adminAddPostEvents"))
     else:
-        new_post = Post(id=id, imgURL="NoPicture", title = title, text = text, date = date)
-        db.session.add(new_post)
-        db.session.commit()
+        postQueries.addPost(id, title, text, date)
         flash("Succesfully created post")  
     return redirect(url_for("admin.adminPostEvents"))
 
@@ -300,15 +268,14 @@ def adminEditEvent(id):
     if current_user.name != "Admin":
         return redirect(url_for('auth.login'))
     name = request.form.get("event_name")
-    date = request.form.get("date").split("/"); the_date = request.form.get("date")
+    date = request.form.get("date"); date_split = date.split("/")
     if len(name) == 0:
         flash("Please enter a name", "error")
         return redirect(url_for("admin.adminPostEvents"))
-    elif len(date) != 3 or not date[0].isdigit() or not date[1].isdigit() or not date[2].isdigit() or len(date[0]) != 2 or len(date[1]) != 2 or len(date[2]) != 4:
+    elif len(date_split) != 3 or not date_split[0].isdigit() or not date_split[1].isdigit() or not date_split[2].isdigit() or len(date_split[0]) != 2 or len(date_split[1]) != 2 or len(date_split[2]) != 4:
         flash("Please fill in a correct date (DD/MM/YYYY)", "error")
         return redirect(url_for("admin.adminPostEvents"))
-    Events.query.filter(Events.id == id).update({Events.name: name, Events.date:the_date})
-    db.session.commit()
+    eventQueries.updateEvent(id, name, date)
     return redirect(url_for("admin.adminPostEvents"))
 
 @admin.route('/post-events/edit-post/<id>', methods=['POST'])
@@ -319,31 +286,24 @@ def adminEditPost(id):
     file = request.files['file']
     title = request.form.get('title')
     text = request.form.get('text')
-    the_date =  request.form.get("datePost")
-    date = request.form.get("datePost").split("/")
+    date =  request.form.get("datePost"); date_split = date.split("/")
     if len(title) == 0:
         flash("Please enter a title", "error")
         return redirect(url_for("admin.adminPostEvents"))
     elif len(text) == 0:
         flash("Please enter some text", "error")
         return redirect(url_for("admin.adminPostEvents"))
-    elif len(date) != 3 or not date[0].isdigit() or not date[1].isdigit() or not date[2].isdigit() or len(date[0]) != 2 or len(date[1]) != 2 or len(date[2]) != 4:
+    elif len(date_split) != 3 or not date_split[0].isdigit() or not date_split[1].isdigit() or not date_split[2].isdigit() or len(date_split[0]) != 2 or len(date_split[1]) != 2 or len(date_split[2]) != 4:
         flash("Please fill in a correct date (DD/MM/YYYY)", "error")
         return redirect(url_for("admin.adminPostEvents"))
     if(allowed_file(file.filename)):
-        fileName = "post" + str(id) + "." + file.filename.rsplit('.', 1)[1]
-        UPLOADS_PATH = join(dirname(realpath(__file__)), 'static/pictures/' + fileName)
-        file.save(UPLOADS_PATH)
-        imgURL="pictures/" + fileName
-        Post.query.filter(Post.id == id).update({Post.title: title, Post.date: the_date, Post.imgURL: imgURL, Post.text: text})
-        db.session.commit()
+        postQueries.updatePostWithPicture(id, title, date, text, file)
         flash("Succesfully edited post with picture")
     elif len(file.filename) > 0:
         flash("File is not allowed, allowed formats are png and jpg", "error")  
         return redirect(url_for("admin.adminPostEvents"))
     else:
-        Post.query.filter(Post.id == id).update({Post.title: title, Post.date: the_date, Post.text: text})
-        db.session.commit()
+        postQueries.updatePost(id, title, date, text)
         flash("Succesfully edited post")  
     return redirect(url_for("admin.adminPostEvents"))
     
@@ -353,19 +313,16 @@ def adminEditPost(id):
 def adminAddEvent():
     event_name = request.form.get('event_name')
     date = request.form.get('date')
-    the_date = date
-    date = date.split("/")
+    date = date; date_split = date.split("/")
     if len(event_name) == 0:
         flash("Pleas fill in a name for the event", "error")
         return redirect(url_for('admin.adminPostEvents'))
-    elif len(date) != 3 or not date[0].isdigit() or not date[1].isdigit() or not date[2].isdigit() or len(date[0]) != 2 or len(date[1]) != 2 or len(date[2]) != 4:
+    elif len(date_split) != 3 or not date_split[0].isdigit() or not date_split[1].isdigit() or not date_split[2].isdigit() or len(date_split[0]) != 2 or len(date_split[1]) != 2 or len(date_split[2]) != 4:
         flash("Please fill in a correct date (DD/MM/YYYY)", "error")
         return redirect(url_for('admin.adminPostEvents'))
-    new_event = Events(date = the_date, name = event_name)
-    db.session.add(new_event)
-    db.session.commit()
+    eventQueries.addEvent(date, event_name)
     flash("Successfully added new Event")
-    return redirect(url_for('admin.adminPostEventsOverview'))
+    return redirect(url_for('admin.adminPostEvents'))
 
 def allowed_file(filename):
     return '.' in filename and \
